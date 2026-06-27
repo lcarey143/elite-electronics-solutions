@@ -1,8 +1,9 @@
 import json
 import logging
-import threading
+import os
 
 from django.conf import settings
+from django.db import connection
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
@@ -11,6 +12,7 @@ from django.views.decorators.http import require_GET, require_POST
 from .forms import BookingForm
 from .models import (
     AboutCard,
+    Booking,
     Certification,
     Partner,
     PricingExtra,
@@ -41,16 +43,6 @@ def home(request):
     return render(request, "website/home.html", context)
 
 
-def _send_booking_email_async(booking_id):
-    from .models import Booking
-
-    try:
-        booking = Booking.objects.get(pk=booking_id)
-        send_booking_notification(booking)
-    except Exception:
-        logger.exception("Booking email failed for booking id %s", booking_id)
-
-
 @require_POST
 @csrf_protect
 def submit_booking(request):
@@ -64,17 +56,25 @@ def submit_booking(request):
         booking.reference = generate_booking_reference()
         booking.save()
 
-        threading.Thread(
-            target=_send_booking_email_async,
-            args=(booking.pk,),
-            daemon=True,
-        ).start()
+        email_sent = False
+        try:
+            email_sent = send_booking_notification(booking)
+        except Exception:
+            logger.exception("Booking email failed for %s", booking.reference)
+
+        logger.info(
+            "Booking saved: %s for %s (email_sent=%s, db=%s)",
+            booking.reference,
+            booking.email,
+            email_sent,
+            connection.vendor,
+        )
 
         return JsonResponse(
             {
                 "success": True,
                 "reference": booking.reference,
-                "email_sent": True,
+                "email_sent": email_sent,
                 "message": "Booking request received! Our team will contact you within 24 hours.",
             }
         )
@@ -144,6 +144,21 @@ def ai_chat(request):
 def health_check(request):
     try:
         ServiceOption.objects.exists()
-        return JsonResponse({"status": "ok", "database": "ok"})
+        booking_count = Booking.objects.count()
+        engine = settings.DATABASES["default"]["ENGINE"].split(".")[-1]
+        using_sqlite_on_railway = bool(
+            os.environ.get("RAILWAY_ENVIRONMENT") and engine == "sqlite3"
+        )
+        return JsonResponse(
+            {
+                "status": "ok",
+                "database": "ok",
+                "engine": engine,
+                "bookings": booking_count,
+                "warning": "Add PostgreSQL on Railway — SQLite data is not persistent"
+                if using_sqlite_on_railway
+                else None,
+            }
+        )
     except Exception as exc:
         return JsonResponse({"status": "error", "database": str(exc)}, status=500)

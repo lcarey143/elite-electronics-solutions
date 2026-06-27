@@ -9,6 +9,7 @@
   const bookingLayout = document.getElementById('bookingLayout');
   const bookingSuccess = document.getElementById('bookingSuccess');
   const bookingRef = document.getElementById('bookingRef');
+  const bookingEmailNote = document.getElementById('bookingEmailNote');
   const bookingError = document.getElementById('bookingError');
   const bookingSubmit = document.getElementById('bookingSubmit');
   const preferredDate = document.getElementById('id_preferred_date');
@@ -119,6 +120,9 @@
         bookingLayout.hidden = true;
         bookingSuccess.hidden = false;
         bookingRef.textContent = data.reference;
+        if (bookingEmailNote) {
+          bookingEmailNote.hidden = !data.email_sent;
+        }
         bookingSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } catch (err) {
         bookingError.textContent = 'Network error. Please check your connection and try again.';

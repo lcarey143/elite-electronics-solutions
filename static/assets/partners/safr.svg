@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" role="img" aria-label="SAFR by RealNetworks">
+  <defs>
+    <linearGradient id="safrGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6B21A8"/>
+      <stop offset="100%" style="stop-color:#9333EA"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="80" rx="8" fill="#1a1025"/>
+  <text x="24" y="38" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="url(#safrGrad)">SAFR</text>
+  <text x="24" y="58" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#c4b5fd" letter-spacing="1.5">BY REALNETWORKS</text>
+  <rect x="170" y="18" width="50" height="44" rx="6" fill="none" stroke="#9333EA" stroke-width="2"/>
+  <circle cx="195" cy="34" r="8" fill="none" stroke="#a855f7" stroke-width="2"/>
+  <path d="M182 52 Q195 42 208 52" fill="none" stroke="#a855f7" stroke-width="2"/>
+</svg>

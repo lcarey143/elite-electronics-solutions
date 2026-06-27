@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" role="img" aria-label="ENS Security">
+  <rect width="200" height="80" rx="8" fill="#0d2818"/>
+  <text x="100" y="48" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" fill="#7cfc00">ENS</text>
+  <text x="100" y="68" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#a8c5b0" letter-spacing="2">SECURITY</text>
+</svg>

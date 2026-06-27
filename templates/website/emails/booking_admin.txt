@@ -1,0 +1,20 @@
+New site visit booking — {{ booking.reference }}
+
+Name: {{ booking.full_name }}
+Email: {{ booking.email }}
+Phone: {{ booking.phone }}
+Property Type: {{ property_type_display }}
+Preferred Date: {{ booking.preferred_date }}
+Preferred Time: {{ time_display }}
+Address: {{ booking.address }}
+
+Services Requested:
+{% for service in booking.services %}- {{ service }}
+{% endfor %}
+
+Project Details:
+{{ booking.message|default:"(none provided)" }}
+
+Submitted: {{ booking.created_at }}
+
+Log in to the admin panel to manage this booking.

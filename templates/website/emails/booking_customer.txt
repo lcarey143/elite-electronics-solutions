@@ -1,0 +1,19 @@
+Hi {{ booking.full_name }},
+
+Thank you for booking a site visit with Elite Electronics Solutions!
+
+Your reference number is: {{ booking.reference }}
+
+We have received your request for:
+- Date: {{ booking.preferred_date }}
+- Time: {{ time_display }}
+- Address: {{ booking.address }}
+
+Our team will contact you within 24 hours to confirm your appointment.
+
+If you have any questions, reply to this email or call us at (242) 375-4179.
+
+Best regards,
+Elite Electronics Solutions
+Unit #7 Millennium Mall, West Atlantic Drive
+Freeport, Grand Bahama

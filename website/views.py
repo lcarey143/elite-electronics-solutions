@@ -1,9 +1,10 @@
 import json
 import logging
 import os
+import threading
 
 from django.conf import settings
-from django.db import connection
+from django.db import connection, transaction
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
@@ -24,6 +25,15 @@ from .models import (
 from .services import build_ai_system_prompt, generate_booking_reference, send_booking_notification
 
 logger = logging.getLogger(__name__)
+
+
+def _send_booking_email_background(booking_id):
+    try:
+        booking = Booking.objects.get(pk=booking_id)
+        sent = send_booking_notification(booking)
+        logger.info("Background email for booking %s: sent=%s", booking.reference, sent)
+    except Exception:
+        logger.exception("Background email failed for booking id %s", booking_id)
 
 
 @ensure_csrf_cookie
@@ -56,17 +66,18 @@ def submit_booking(request):
         booking.reference = generate_booking_reference()
         booking.save()
 
-        email_sent = False
-        try:
-            email_sent = send_booking_notification(booking)
-        except Exception:
-            logger.exception("Booking email failed for %s", booking.reference)
+        transaction.on_commit(
+            lambda pk=booking.pk: threading.Thread(
+                target=_send_booking_email_background,
+                args=(pk,),
+                daemon=True,
+            ).start()
+        )
 
         logger.info(
-            "Booking saved: %s for %s (email_sent=%s, db=%s)",
+            "Booking saved: %s for %s (db=%s)",
             booking.reference,
             booking.email,
-            email_sent,
             connection.vendor,
         )
 
@@ -74,7 +85,7 @@ def submit_booking(request):
             {
                 "success": True,
                 "reference": booking.reference,
-                "email_sent": email_sent,
+                "email_sent": False,
                 "message": "Booking request received! Our team will contact you within 24 hours.",
             }
         )

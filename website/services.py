@@ -1,10 +1,23 @@
 import uuid
 
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import get_connection, send_mail
 from django.template.loader import render_to_string
 
 from .models import Booking, Certification, Partner, PricingExtra, PricingPackage, Service, SiteSettings
+
+
+def _mail_connection():
+    timeout = getattr(settings, "EMAIL_TIMEOUT", 5)
+    return get_connection(
+        backend=settings.EMAIL_BACKEND,
+        host=settings.EMAIL_HOST,
+        port=settings.EMAIL_PORT,
+        username=settings.EMAIL_HOST_USER,
+        password=settings.EMAIL_HOST_PASSWORD,
+        use_tls=settings.EMAIL_USE_TLS,
+        timeout=timeout,
+    )
 
 
 def generate_booking_reference():
@@ -33,12 +46,14 @@ def send_booking_notification(booking: Booking):
     customer_body = render_to_string("website/emails/booking_customer.txt", context)
 
     sent_count = 0
+    mail_conn = _mail_connection()
     sent_count += send_mail(
         subject=admin_subject,
         message=admin_body,
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[settings_obj.contact_email],
         fail_silently=True,
+        connection=mail_conn,
     )
     sent_count += send_mail(
         subject=customer_subject,
@@ -46,7 +61,9 @@ def send_booking_notification(booking: Booking):
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[booking.email],
         fail_silently=True,
+        connection=mail_conn,
     )
+    mail_conn.close()
     return sent_count > 0
 
 

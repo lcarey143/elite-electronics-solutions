@@ -15,12 +15,15 @@ from .models import (
     AboutCard,
     Booking,
     Certification,
+    FAQ,
     Partner,
     PricingExtra,
     PricingPackage,
+    Project,
     Service,
     ServiceOption,
     SiteSettings,
+    Testimonial,
 )
 from .services import build_ai_system_prompt, generate_booking_reference, send_booking_notification
 
@@ -43,6 +46,9 @@ def home(request):
         "site": site,
         "about_cards": AboutCard.objects.all(),
         "services": Service.objects.filter(is_active=True),
+        "projects": Project.objects.filter(is_active=True),
+        "testimonials": Testimonial.objects.filter(is_active=True),
+        "faqs": FAQ.objects.filter(is_active=True),
         "pricing_packages": PricingPackage.objects.filter(is_active=True),
         "pricing_extras": PricingExtra.objects.filter(is_active=True),
         "partners": Partner.objects.filter(is_active=True),

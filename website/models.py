@@ -32,6 +32,28 @@ class SiteSettings(models.Model):
         max_length=200,
         default="Starting estimates — final quotes provided after site assessment",
     )
+    meta_description = models.TextField(
+        default=(
+            "Elite Electronics Solutions — CCTV, access control, fire alarms, SAFR facial recognition "
+            "and full security integration in Freeport, Grand Bahama. Free site visits."
+        ),
+    )
+    whatsapp_number = models.CharField(
+        max_length=20,
+        default="12423754179",
+        help_text="Digits only for WhatsApp link, e.g. 12423754179",
+    )
+    google_reviews_url = models.URLField(
+        blank=True,
+        help_text="Link to your Google Business Profile reviews page",
+    )
+    trust_items = models.JSONField(
+        default=list,
+        help_text='Trust strip items, e.g. ["Free site visits", "Axis authorized partner"]',
+    )
+    stat_projects = models.CharField(max_length=40, default="100+", blank=True)
+    stat_years = models.CharField(max_length=40, default="10+", blank=True)
+    stat_support = models.CharField(max_length=40, default="Local team", blank=True)
     ai_system_prompt_extra = models.TextField(
         blank=True,
         help_text="Extra instructions for the AI assistant (optional).",
@@ -52,6 +74,30 @@ class SiteSettings(models.Model):
     def load(cls):
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
+
+    @property
+    def phone_tel(self):
+        digits = "".join(c for c in self.contact_phone if c.isdigit())
+        if len(digits) == 10:
+            return f"+1{digits}"
+        if digits.startswith("1") and len(digits) == 11:
+            return f"+{digits}"
+        return f"+{digits}" if digits else self.contact_phone
+
+    @property
+    def whatsapp_url(self):
+        digits = "".join(c for c in self.whatsapp_number if c.isdigit())
+        return f"https://wa.me/{digits}" if digits else ""
+
+    def get_trust_items(self):
+        if self.trust_items:
+            return self.trust_items
+        return [
+            "Free site visits & assessments",
+            "Axis & SAFR authorized partner",
+            "BICSI-certified professionals",
+            "Local Grand Bahama team",
+        ]
 
 
 class AboutCard(models.Model):
@@ -222,3 +268,71 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.reference} — {self.full_name}"
+
+
+class Project(models.Model):
+    PROPERTY_TYPES = [
+        ("residential", "Residential"),
+        ("commercial", "Commercial"),
+        ("industrial", "Industrial"),
+    ]
+
+    title = models.CharField(max_length=160)
+    location = models.CharField(max_length=120, default="Freeport, Grand Bahama")
+    property_type = models.CharField(max_length=20, choices=PROPERTY_TYPES, default="commercial")
+    summary = models.CharField(max_length=240)
+    challenge = models.TextField()
+    solution = models.TextField()
+    result = models.TextField()
+    services = models.JSONField(
+        default=list,
+        help_text='Tags shown on card, e.g. ["CCTV", "Access Control"]',
+    )
+    image = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text='Static asset path, e.g. "assets/projects/site-1.jpg" — leave blank for icon placeholder',
+    )
+    icon = models.CharField(max_length=10, default="📹")
+    is_featured = models.BooleanField(default=False)
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.title
+
+
+class Testimonial(models.Model):
+    client_name = models.CharField(max_length=120)
+    client_role = models.CharField(
+        max_length=160,
+        help_text='e.g. "Commercial client, Freeport" or "Homeowner, Lucaya"',
+    )
+    quote = models.TextField()
+    rating = models.PositiveSmallIntegerField(default=5)
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["order"]
+
+    def __str__(self):
+        return f"{self.client_name} — {self.client_role}"
+
+
+class FAQ(models.Model):
+    question = models.CharField(max_length=240)
+    answer = models.TextField()
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["order"]
+        verbose_name = "FAQ"
+        verbose_name_plural = "FAQs"
+
+    def __str__(self):
+        return self.question

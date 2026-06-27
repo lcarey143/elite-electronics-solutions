@@ -4,20 +4,55 @@ from .models import (
     AboutCard,
     Booking,
     Certification,
+    FAQ,
     Partner,
     PricingExtra,
     PricingPackage,
+    Project,
     Service,
     ServiceOption,
     SiteSettings,
+    Testimonial,
 )
 
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     fieldsets = (
-        ("Company", {"fields": ("company_name", "tagline", "hero_subtitle", "pricing_note")}),
-        ("Contact", {"fields": ("contact_email", "contact_phone")}),
+        (
+            "Company",
+            {
+                "fields": (
+                    "company_name",
+                    "tagline",
+                    "hero_subtitle",
+                    "meta_description",
+                    "pricing_note",
+                )
+            },
+        ),
+        (
+            "Stats & trust strip",
+            {
+                "fields": (
+                    "trust_items",
+                    "stat_projects",
+                    "stat_years",
+                    "stat_support",
+                )
+            },
+        ),
+        (
+            "Contact",
+            {
+                "fields": (
+                    "contact_email",
+                    "contact_phone",
+                    "whatsapp_number",
+                    "google_reviews_url",
+                )
+            },
+        ),
         (
             "Address",
             {"fields": ("address_line1", "address_line2", "address_city", "address_country", "maps_query")},
@@ -79,10 +114,35 @@ class ServiceOptionAdmin(admin.ModelAdmin):
     list_editable = ("order", "is_active")
 
 
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ("title", "property_type", "location", "is_featured", "order", "is_active")
+    list_editable = ("order", "is_featured", "is_active")
+    list_filter = ("is_active", "property_type", "is_featured")
+    search_fields = ("title", "location", "summary")
+
+
+@admin.register(Testimonial)
+class TestimonialAdmin(admin.ModelAdmin):
+    list_display = ("client_name", "client_role", "rating", "order", "is_active")
+    list_editable = ("order", "rating", "is_active")
+    list_filter = ("is_active",)
+
+
+@admin.register(FAQ)
+class FAQAdmin(admin.ModelAdmin):
+    list_display = ("question", "order", "is_active")
+    list_editable = ("order", "is_active")
+    search_fields = ("question", "answer")
+
+
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
     list_display = ("reference", "full_name", "email", "preferred_date", "status", "created_at")
-    list_filter = ("status", "property_type", "preferred_date")
+    list_filter = ("status", "property_type")
     search_fields = ("reference", "full_name", "email", "phone")
     readonly_fields = ("reference", "created_at")
     list_editable = ("status",)
+    date_hierarchy = "created_at"
+    ordering = ("-created_at",)
+    list_per_page = 50

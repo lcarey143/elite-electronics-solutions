@@ -57,7 +57,7 @@
       { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
     );
 
-    document.querySelectorAll('.reveal-on-scroll, .glass-card, .service-card, .pricing-card, .partner-card, .contact-card, .credential-card').forEach((el) => {
+    document.querySelectorAll('.reveal-on-scroll, .glass-card, .service-card, .pricing-card, .partner-card, .contact-card, .credential-card, .project-card, .testimonial-card, .faq-item').forEach((el) => {
       el.classList.add('reveal-on-scroll');
       revealObserver.observe(el);
     });

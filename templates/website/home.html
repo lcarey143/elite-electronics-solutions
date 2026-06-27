@@ -4,13 +4,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="{{ site.company_name }} — Systems integrator for security, CCTV, access control, fire alarm, and life safety systems in Freeport, Grand Bahama.">
-  <title>{{ site.company_name }} | Security & Life Safety Systems</title>
+  <meta name="description" content="{{ site.meta_description }}">
+  <meta name="keywords" content="CCTV Freeport, security systems Grand Bahama, access control Bahamas, fire alarm Freeport, SAFR facial recognition, Elite Electronics Solutions">
+  <meta property="og:title" content="{{ site.company_name }} | Security & Life Safety Systems">
+  <meta property="og:description" content="{{ site.meta_description }}">
+  <meta property="og:type" content="website">
+  <title>{{ site.company_name }} | CCTV & Security Systems — Freeport, Grand Bahama</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
   <link rel="icon" href="{% static 'assets/logo.png' %}" type="image/png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "{{ site.company_name|escapejs }}",
+    "description": "{{ site.meta_description|escapejs }}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}",
+    "telephone": "{{ site.contact_phone|escapejs }}",
+    "email": "{{ site.contact_email|escapejs }}",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "{{ site.address_line1|escapejs }}, {{ site.address_line2|escapejs }}",
+      "addressLocality": "Freeport",
+      "addressRegion": "Grand Bahama",
+      "addressCountry": "BS"
+    },
+    "areaServed": "Grand Bahama, The Bahamas",
+    "priceRange": "$$"
+  }
+  </script>
 </head>
 <body>
   <div class="cursor-glow" id="cursorGlow"></div>
@@ -29,9 +53,11 @@
         <li><a href="#home">Home</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#services">Services</a></li>
+        <li><a href="#projects">Projects</a></li>
         <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#reviews">Reviews</a></li>
         <li><a href="#partners">Partners</a></li>
-        <li><a href="#credentials">Credentials</a></li>
+        <li><a href="#faq">FAQ</a></li>
         <li><a href="#booking">Book Visit</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -44,14 +70,24 @@
       <div class="hero-content layer-3d" data-depth="0.3">
         <div class="hero-badge">{{ site.tagline }}</div>
         <h1 class="hero-title">
-          <span class="title-line">Elite Electronics</span>
-          <span class="title-line accent">Solutions</span>
+          <span class="title-line">Security &amp; Life Safety</span>
+          <span class="title-line accent">Built for Grand Bahama</span>
         </h1>
         <p class="hero-subtitle">{{ site.hero_subtitle }}</p>
+        <div class="hero-stats">
+          {% if site.stat_projects %}<div class="hero-stat"><strong>{{ site.stat_projects }}</strong><span>Projects delivered</span></div>{% endif %}
+          {% if site.stat_years %}<div class="hero-stat"><strong>{{ site.stat_years }}</strong><span>Years experience</span></div>{% endif %}
+          {% if site.stat_support %}<div class="hero-stat"><strong>{{ site.stat_support }}</strong><span>Grand Bahama based</span></div>{% endif %}
+        </div>
         <div class="hero-actions">
-          <a href="#booking" class="btn btn-primary">Book a Site Visit</a>
+          <a href="#booking" class="btn btn-primary">Book a Free Site Visit</a>
           <a href="#services" class="btn btn-outline">Explore Services</a>
         </div>
+        <ul class="trust-strip" aria-label="Why choose EES">
+          {% for item in site.get_trust_items %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
         <div class="scroll-indicator">
           <span>Scroll to explore</span>
           <div class="scroll-arrow"></div>
@@ -98,6 +134,52 @@
             </ul>
             {% endif %}
           </article>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="section projects-section scene-3d">
+      <div class="section-inner layer-3d" data-depth="0.16">
+        <div class="section-header">
+          <span class="section-tag">Our Work</span>
+          <h2>Projects &amp; Case Studies</h2>
+          <p class="section-desc">Real security and life safety deployments across Freeport and Grand Bahama</p>
+        </div>
+        <div class="projects-grid">
+          {% for project in projects %}
+          <article class="project-card glass-card{% if project.is_featured %} featured{% endif %}">
+            <div class="project-media">
+              {% if project.image %}
+              <img src="{% static project.image %}" alt="{{ project.title }}">
+              {% else %}
+              <div class="project-placeholder">{{ project.icon }}</div>
+              {% endif %}
+              <span class="project-type">{{ project.get_property_type_display }}</span>
+            </div>
+            <div class="project-body">
+              <p class="project-location">{{ project.location }}</p>
+              <h3>{{ project.title }}</h3>
+              <p class="project-summary">{{ project.summary }}</p>
+              <details class="project-details">
+                <summary>See project story</summary>
+                <div class="project-story">
+                  <p><strong>Challenge:</strong> {{ project.challenge }}</p>
+                  <p><strong>Solution:</strong> {{ project.solution }}</p>
+                  <p><strong>Result:</strong> {{ project.result }}</p>
+                </div>
+              </details>
+              {% if project.services %}
+              <div class="project-tags">
+                {% for tag in project.services %}
+                <span>{{ tag }}</span>
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+          </article>
+          {% empty %}
+          <p class="section-desc">Project highlights coming soon — add them in the admin under Projects.</p>
           {% endfor %}
         </div>
       </div>
@@ -193,6 +275,55 @@
               {% if cert.valid_until %}<p class="credential-valid">Valid: {{ cert.valid_until }}</p>{% endif %}
             </div>
           </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section id="reviews" class="section reviews-section scene-3d">
+      <div class="section-inner layer-3d" data-depth="0.12">
+        <div class="section-header">
+          <span class="section-tag">Client Feedback</span>
+          <h2>What Our Clients Say</h2>
+          <p class="section-desc">Trusted by homeowners and businesses across Grand Bahama</p>
+        </div>
+        <div class="testimonials-grid">
+          {% for testimonial in testimonials %}
+          <blockquote class="testimonial-card glass-card">
+            <div class="testimonial-stars" aria-label="{{ testimonial.rating }} out of 5 stars">
+              {% for i in "12345" %}
+                {% if forloop.counter <= testimonial.rating %}★{% else %}☆{% endif %}
+              {% endfor %}
+            </div>
+            <p>"{{ testimonial.quote }}"</p>
+            <footer>
+              <strong>{{ testimonial.client_name }}</strong>
+              <span>{{ testimonial.client_role }}</span>
+            </footer>
+          </blockquote>
+          {% endfor %}
+        </div>
+        {% if site.google_reviews_url %}
+        <div class="reviews-cta">
+          <a href="{{ site.google_reviews_url }}" target="_blank" rel="noopener" class="btn btn-outline">Read Google Reviews</a>
+        </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section id="faq" class="section faq-section scene-3d">
+      <div class="section-inner layer-3d" data-depth="0.1">
+        <div class="section-header">
+          <span class="section-tag">Questions</span>
+          <h2>Frequently Asked Questions</h2>
+          <p class="section-desc">Quick answers about our services, pricing, and process in Grand Bahama</p>
+        </div>
+        <div class="faq-list">
+          {% for faq in faqs %}
+          <details class="faq-item glass-card">
+            <summary>{{ faq.question }}</summary>
+            <p>{{ faq.answer }}</p>
+          </details>
           {% endfor %}
         </div>
       </div>
@@ -331,6 +462,18 @@
     </section>
   </main>
 
+  <div class="sticky-contact" id="stickyContact" aria-label="Quick contact">
+    <a href="tel:{{ site.phone_tel }}" class="sticky-btn sticky-call">
+      <span aria-hidden="true">📞</span> Call
+    </a>
+    {% if site.whatsapp_url %}
+    <a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener" class="sticky-btn sticky-whatsapp">
+      <span aria-hidden="true">💬</span> WhatsApp
+    </a>
+    {% endif %}
+    <a href="#booking" class="sticky-btn sticky-book btn-primary">Book Visit</a>
+  </div>
+
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand">
@@ -340,9 +483,10 @@
       <div class="footer-links">
         <h4>Quick Links</h4>
         <a href="#services">Services</a>
+        <a href="#projects">Projects</a>
         <a href="#pricing">Pricing</a>
-        <a href="#partners">Partners</a>
-        <a href="#credentials">Credentials</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#faq">FAQ</a>
         <a href="#booking">Book Visit</a>
         <a href="#contact">Contact</a>
       </div>

@@ -5,12 +5,15 @@ from django.core.management.base import BaseCommand
 from website.models import (
     AboutCard,
     Certification,
+    FAQ,
     Partner,
     PricingExtra,
     PricingPackage,
+    Project,
     Service,
     ServiceOption,
     SiteSettings,
+    Testimonial,
 )
 
 
@@ -22,8 +25,23 @@ class Command(BaseCommand):
             pk=1,
             defaults={
                 "company_name": "Elite Electronics Solutions",
+                "tagline": "Security & Life Safety · Freeport, Grand Bahama",
+                "hero_subtitle": (
+                    "CCTV, access control, fire alarms, SAFR facial recognition, and full systems integration — "
+                    "designed, installed, and supported by a local Grand Bahama team. Free site assessments."
+                ),
                 "contact_email": "lashardcarey@gmail.com",
                 "contact_phone": "(242) 375-4179",
+                "whatsapp_number": "12423754179",
+                "trust_items": [
+                    "Free site visits & assessments",
+                    "Axis & SAFR authorized partner",
+                    "BICSI-certified professionals",
+                    "Local Grand Bahama team",
+                ],
+                "stat_projects": "100+",
+                "stat_years": "10+",
+                "stat_support": "Local support",
             },
         )
         self.stdout.write(f"Site settings: {site.company_name}")
@@ -143,5 +161,136 @@ class Command(BaseCommand):
                 defaults={"label": label, "order": order, "is_active": True},
             )
         self.stdout.write("Synced booking options")
+
+        if not Project.objects.exists():
+            projects = [
+                (
+                    "Multi-Camera Commercial Surveillance",
+                    "commercial",
+                    "Downtown Freeport",
+                    "16-camera Axis IP system with remote viewing for a retail plaza.",
+                    "Legacy analog cameras with poor coverage and no remote access.",
+                    "Designed coverage map, installed Axis cameras, NVR, and mobile app access.",
+                    "Full perimeter coverage, 30-day recording, staff trained same day.",
+                    ["CCTV", "Axis", "Remote viewing"],
+                    "📹",
+                    True,
+                ),
+                (
+                    "Residential SAFR & Access Upgrade",
+                    "residential",
+                    "Lucaya, Grand Bahama",
+                    "Facial recognition entry and CCTV for a private residence.",
+                    "Keys and basic intercom only — no audit trail or smart alerts.",
+                    "SAFR facial recognition at main entry plus 6-camera CCTV integration.",
+                    "Secure family access, visitor logs, and phone notifications.",
+                    ["SAFR", "Access Control", "CCTV"],
+                    "🧠",
+                    True,
+                ),
+                (
+                    "Fire Alarm & Life Safety Retrofit",
+                    "commercial",
+                    "Freeport Industrial Area",
+                    "Silent Knight fire detection and notification for a small warehouse.",
+                    "Outdated panel not meeting current life safety requirements.",
+                    "New Silent Knight panel, detection devices, horn/strobes, and testing.",
+                    "Code-compliant system with documented inspection and staff walkthrough.",
+                    ["Fire Alarm", "Silent Knight", "Life Safety"],
+                    "🔥",
+                    False,
+                ),
+            ]
+            for i, (title, ptype, loc, summary, challenge, solution, result, tags, icon, featured) in enumerate(projects):
+                Project.objects.create(
+                    title=title,
+                    property_type=ptype,
+                    location=loc,
+                    summary=summary,
+                    challenge=challenge,
+                    solution=solution,
+                    result=result,
+                    services=tags,
+                    icon=icon,
+                    is_featured=featured,
+                    order=i,
+                )
+            self.stdout.write("Created sample projects")
+        else:
+            self.stdout.write("Projects already exist — skipping")
+
+        if not Testimonial.objects.exists():
+            testimonials = [
+                (
+                    "Marcus T.",
+                    "Small business owner, Freeport",
+                    "Professional from start to finish. They mapped our entire property, installed cameras and access control, and trained my staff the same day.",
+                    5,
+                ),
+                (
+                    "Denise H.",
+                    "Homeowner, Lucaya",
+                    "We wanted better security after moving to Grand Bahama. EES explained every option clearly and the SAFR entry system works flawlessly.",
+                    5,
+                ),
+                (
+                    "Operations Manager",
+                    "Commercial facility, Grand Bahama",
+                    "Reliable local team — fast response, clean installs, and they handle fire alarm and CCTV under one roof. Highly recommend.",
+                    5,
+                ),
+            ]
+            for i, (name, role, quote, rating) in enumerate(testimonials):
+                Testimonial.objects.create(
+                    client_name=name,
+                    client_role=role,
+                    quote=quote,
+                    rating=rating,
+                    order=i,
+                )
+            self.stdout.write("Created testimonials")
+        else:
+            self.stdout.write("Testimonials already exist — skipping")
+
+        faq_defaults = [
+            (
+                "Do you serve residential and commercial clients?",
+                "Yes. We install everything from home CCTV and access control to full commercial deployments across Freeport, Grand Bahama, and The Bahamas.",
+            ),
+            (
+                "How much does a CCTV system cost?",
+                "Residential packages start around $499+ depending on camera count and site layout. Commercial systems are quoted after a free on-site assessment.",
+            ),
+            (
+                "Do you offer free site visits?",
+                "Yes. We provide free on-site assessments so we can recommend the right cameras, access points, cabling, and fire safety coverage for your property.",
+            ),
+            (
+                "Which brands do you install?",
+                "We are authorized partners for Axis, SAFR by RealNetworks, Silent Knight, FireLite, ENS, and other leading security and life safety platforms.",
+            ),
+            (
+                "How long does installation take?",
+                "Small residential jobs may take 1–2 days. Larger commercial projects are scheduled in phases — we give you a clear timeline after the site survey.",
+            ),
+            (
+                "Do you provide training and ongoing support?",
+                "Absolutely. We train your staff on day-to-day operation and offer support, maintenance plans, and emergency service calls.",
+            ),
+            (
+                "Are you based locally in Grand Bahama?",
+                "Yes. Elite Electronics Solutions is based at Millennium Mall in Freeport with a local team — not outsourced overseas support.",
+            ),
+            (
+                "How do I book a site visit?",
+                "Use the booking form on this website, call (242) 375-4179, or message us on WhatsApp. We confirm within 24 hours.",
+            ),
+        ]
+        for i, (question, answer) in enumerate(faq_defaults):
+            FAQ.objects.update_or_create(
+                question=question,
+                defaults={"answer": answer, "order": i, "is_active": True},
+            )
+        self.stdout.write("Synced FAQs")
 
         self.stdout.write(self.style.SUCCESS("All content synced successfully."))

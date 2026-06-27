@@ -5,7 +5,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 
 from .email_delivery import send_text_email
-from .models import Booking, Certification, Partner, PricingExtra, PricingPackage, Service, SiteSettings
+from .models import Booking, Certification, FAQ, Partner, PricingExtra, PricingPackage, Service, SiteSettings
 
 logger = logging.getLogger(__name__)
 
@@ -103,9 +103,17 @@ def build_ai_system_prompt():
 
     lines.append("")
     lines.append(
-        "To book a site visit, customers can use the booking form on the website. "
-        "The team confirms within 24 hours and performs a free on-site assessment."
+        "To book a site visit, customers can use the booking form on the website, "
+        "call the office, or WhatsApp. The team confirms within 24 hours and performs a free on-site assessment."
     )
+
+    faqs = FAQ.objects.filter(is_active=True)
+    if faqs.exists():
+        lines.append("")
+        lines.append("FREQUENTLY ASKED QUESTIONS:")
+        for faq in faqs:
+            lines.append(f"Q: {faq.question}")
+            lines.append(f"A: {faq.answer}")
 
     if site.ai_system_prompt_extra.strip():
         lines.append("")

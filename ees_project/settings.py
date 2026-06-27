@@ -27,6 +27,15 @@ CSRF_TRUSTED_ORIGINS = [
     if origin.strip()
 ]
 
+# Railway auto-configuration
+_railway_domain = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "").strip()
+if _railway_domain:
+    ALLOWED_HOSTS.append(_railway_domain)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{_railway_domain}")
+
+if os.environ.get("RAILWAY_ENVIRONMENT"):
+    ALLOWED_HOSTS.extend([".up.railway.app", ".railway.app"])
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",

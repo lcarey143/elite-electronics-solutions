@@ -36,6 +36,25 @@ if _railway_domain:
 if os.environ.get("RAILWAY_ENVIRONMENT"):
     ALLOWED_HOSTS.extend([".up.railway.app", ".railway.app"])
 
+# Custom domain(s) — comma-separated, e.g. eesbahamas.com,www.eesbahamas.com
+_custom_domains = os.environ.get("CUSTOM_DOMAIN", "").strip()
+if _custom_domains:
+    for domain in _custom_domains.split(","):
+        domain = domain.strip()
+        if not domain:
+            continue
+        ALLOWED_HOSTS.append(domain)
+        CSRF_TRUSTED_ORIGINS.append(f"https://{domain}")
+
+_extra_hosts = os.environ.get("ALLOWED_HOSTS", "")
+if _extra_hosts and _extra_hosts not in ("localhost,127.0.0.1",):
+    for host in _extra_hosts.split(","):
+        host = host.strip()
+        if host and host not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(host)
+            if not host.startswith("."):
+                CSRF_TRUSTED_ORIGINS.append(f"https://{host}")
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",

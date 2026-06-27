@@ -1,2 +1,1 @@
-release: python manage.py migrate --noinput && python manage.py seed_data && python manage.py ensure_admin && python manage.py collectstatic --noinput
 web: gunicorn ees_project.wsgi --bind 0.0.0.0:$PORT --timeout 120 --graceful-timeout 30

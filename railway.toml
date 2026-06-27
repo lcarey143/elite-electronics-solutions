@@ -2,6 +2,8 @@
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "python manage.py migrate && python manage.py seed_data && python manage.py ensure_admin && python manage.py collectstatic --noinput && gunicorn ees_project.wsgi --bind 0.0.0.0:$PORT --timeout 120 --graceful-timeout 30"
+preDeployCommand = "python manage.py migrate --noinput && python manage.py seed_data && python manage.py ensure_admin && python manage.py collectstatic --noinput"
+startCommand = "gunicorn ees_project.wsgi --bind 0.0.0.0:$PORT --timeout 120 --graceful-timeout 30"
 healthcheckPath = "/health/"
+healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"

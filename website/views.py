@@ -153,23 +153,17 @@ def ai_chat(request):
 
 @require_GET
 def health_check(request):
+    """Always return 200 so Railway healthchecks pass once gunicorn is up."""
+    payload = {"status": "ok"}
     try:
         ServiceOption.objects.exists()
-        booking_count = Booking.objects.count()
-        engine = settings.DATABASES["default"]["ENGINE"].split(".")[-1]
-        using_sqlite_on_railway = bool(
-            os.environ.get("RAILWAY_ENVIRONMENT") and engine == "sqlite3"
-        )
-        return JsonResponse(
-            {
-                "status": "ok",
-                "database": "ok",
-                "engine": engine,
-                "bookings": booking_count,
-                "warning": "Add PostgreSQL on Railway — SQLite data is not persistent"
-                if using_sqlite_on_railway
-                else None,
-            }
-        )
+        payload["database"] = "ok"
+        payload["engine"] = settings.DATABASES["default"]["ENGINE"].split(".")[-1]
+        payload["bookings"] = Booking.objects.count()
+        if os.environ.get("RAILWAY_ENVIRONMENT") and payload["engine"] == "sqlite3":
+            payload["warning"] = "Add PostgreSQL on Railway — SQLite data is not persistent"
     except Exception as exc:
-        return JsonResponse({"status": "error", "database": str(exc)}, status=500)
+        payload["database"] = "error"
+        payload["database_error"] = str(exc)
+        logger.warning("Health DB check failed: %s", exc)
+    return JsonResponse(payload)

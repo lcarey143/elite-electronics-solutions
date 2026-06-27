@@ -97,11 +97,17 @@ WSGI_APPLICATION = "ees_project.wsgi.application"
 
 _database_url = os.environ.get("DATABASE_URL", "")
 if _database_url:
+    # Railway private network URLs (*.railway.internal) do not use SSL.
+    _postgres_ssl = (
+        _database_url.startswith("postgres")
+        and ".railway.internal" not in _database_url
+        and "sslmode=disable" not in _database_url
+    )
     DATABASES = {
         "default": dj_database_url.config(
             default=_database_url,
             conn_max_age=600,
-            ssl_require=_database_url.startswith("postgres"),
+            ssl_require=_postgres_ssl,
         )
     }
 else:
@@ -131,7 +137,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Email
+# Email — Gmail works locally; use Resend on Railway (EMAIL_PROVIDER=resend).
 EMAIL_BACKEND = os.environ.get(
     "EMAIL_BACKEND",
     "django.core.mail.backends.console.EmailBackend",
@@ -141,7 +147,19 @@ EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "True").lower() in ("true", "1", "yes")
-EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", "5"))
+EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", "10"))
+
+_resend_api_key = os.environ.get("RESEND_API_KEY", "").strip()
+RESEND_API_KEY = _resend_api_key
+_email_provider = os.environ.get("EMAIL_PROVIDER", "").strip().lower()
+if _email_provider == "resend" or (_resend_api_key and not EMAIL_HOST):
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "smtp.resend.com"
+    EMAIL_PORT = 587
+    EMAIL_HOST_USER = "resend"
+    EMAIL_HOST_PASSWORD = _resend_api_key
+    EMAIL_USE_TLS = True
+
 DEFAULT_FROM_EMAIL = os.environ.get(
     "DEFAULT_FROM_EMAIL",
     "Elite Electronics Solutions <noreply@eliteelectronicssolutions.com>",

@@ -1,24 +1,13 @@
+import logging
 import uuid
 
 from django.conf import settings
-from django.core.mail import get_connection, send_mail
 from django.template.loader import render_to_string
 
+from .email_delivery import send_text_email
 from .models import Booking, Certification, Partner, PricingExtra, PricingPackage, Service, SiteSettings
 
-
-def _mail_connection():
-    timeout = getattr(settings, "EMAIL_TIMEOUT", 5)
-    return get_connection(
-        backend=settings.EMAIL_BACKEND,
-        host=settings.EMAIL_HOST,
-        port=settings.EMAIL_PORT,
-        username=settings.EMAIL_HOST_USER,
-        password=settings.EMAIL_HOST_PASSWORD,
-        use_tls=settings.EMAIL_USE_TLS,
-        timeout=timeout,
-    )
-
+logger = logging.getLogger(__name__)
 
 def generate_booking_reference():
     return f"EES-{uuid.uuid4().hex[:8].upper()}"
@@ -26,12 +15,6 @@ def generate_booking_reference():
 
 def send_booking_notification(booking: Booking):
     """Send admin + customer emails. Returns True if at least one email was sent."""
-    if settings.EMAIL_BACKEND == "django.core.mail.backends.console.EmailBackend":
-        return False
-
-    if not settings.EMAIL_HOST_USER or not settings.EMAIL_HOST_PASSWORD:
-        return False
-
     settings_obj = SiteSettings.load()
     context = {
         "booking": booking,
@@ -46,26 +29,29 @@ def send_booking_notification(booking: Booking):
     customer_body = render_to_string("website/emails/booking_customer.txt", context)
 
     sent_count = 0
-    mail_conn = _mail_connection()
-    sent_count += send_mail(
-        subject=admin_subject,
-        message=admin_body,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[settings_obj.contact_email],
-        fail_silently=True,
-        connection=mail_conn,
-    )
-    sent_count += send_mail(
-        subject=customer_subject,
-        message=customer_body,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[booking.email],
-        fail_silently=True,
-        connection=mail_conn,
-    )
-    mail_conn.close()
-    return sent_count > 0
+    try:
+        if send_text_email(
+            subject=admin_subject,
+            body=admin_body,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=settings_obj.contact_email,
+        ):
+            sent_count += 1
+    except Exception:
+        logger.exception("Failed to send admin booking email for %s", booking.reference)
 
+    try:
+        if send_text_email(
+            subject=customer_subject,
+            body=customer_body,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=booking.email,
+        ):
+            sent_count += 1
+    except Exception:
+        logger.exception("Failed to send customer booking email for %s", booking.reference)
+
+    return sent_count > 0
 
 def build_ai_system_prompt():
     site = SiteSettings.load()

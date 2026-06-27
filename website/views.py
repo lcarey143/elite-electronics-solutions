@@ -1,9 +1,11 @@
 import json
+import logging
+import threading
 
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 from django.views.decorators.http import require_GET, require_POST
 
 from .forms import BookingForm
@@ -19,7 +21,10 @@ from .models import (
 )
 from .services import build_ai_system_prompt, generate_booking_reference, send_booking_notification
 
+logger = logging.getLogger(__name__)
 
+
+@ensure_csrf_cookie
 def home(request):
     site = SiteSettings.load()
     context = {
@@ -36,6 +41,16 @@ def home(request):
     return render(request, "website/home.html", context)
 
 
+def _send_booking_email_async(booking_id):
+    from .models import Booking
+
+    try:
+        booking = Booking.objects.get(pk=booking_id)
+        send_booking_notification(booking)
+    except Exception:
+        logger.exception("Booking email failed for booking id %s", booking_id)
+
+
 @require_POST
 @csrf_protect
 def submit_booking(request):
@@ -43,26 +58,35 @@ def submit_booking(request):
     if not form.is_valid():
         return JsonResponse({"success": False, "errors": form.errors}, status=400)
 
-    booking = form.save(commit=False)
-    booking.reference = generate_booking_reference()
-    booking.save()
-
     try:
-        send_booking_notification(booking)
-        email_sent = True
-    except Exception as exc:
-        email_sent = False
-        import logging
-        logging.getLogger(__name__).warning("Booking email failed: %s", exc)
+        booking = form.save(commit=False)
+        booking.services = list(form.cleaned_data.get("services", []))
+        booking.reference = generate_booking_reference()
+        booking.save()
 
-    return JsonResponse(
-        {
-            "success": True,
-            "reference": booking.reference,
-            "email_sent": email_sent,
-            "message": "Booking request received! Our team will contact you within 24 hours.",
-        }
-    )
+        threading.Thread(
+            target=_send_booking_email_async,
+            args=(booking.pk,),
+            daemon=True,
+        ).start()
+
+        return JsonResponse(
+            {
+                "success": True,
+                "reference": booking.reference,
+                "email_sent": True,
+                "message": "Booking request received! Our team will contact you within 24 hours.",
+            }
+        )
+    except Exception:
+        logger.exception("Booking submission failed")
+        return JsonResponse(
+            {
+                "success": False,
+                "error": "Could not save your booking. Please call us at (242) 375-4179 or email lashardcarey@gmail.com.",
+            },
+            status=500,
+        )
 
 
 @require_POST
@@ -118,4 +142,8 @@ def ai_chat(request):
 
 @require_GET
 def health_check(request):
-    return JsonResponse({"status": "ok"})
+    try:
+        ServiceOption.objects.exists()
+        return JsonResponse({"status": "ok", "database": "ok"})
+    except Exception as exc:
+        return JsonResponse({"status": "error", "database": str(exc)}, status=500)

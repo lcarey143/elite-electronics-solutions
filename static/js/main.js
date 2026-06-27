@@ -88,13 +88,24 @@
       try {
         const response = await fetch(config.bookingUrl || bookingForm.action, {
           method: 'POST',
+          credentials: 'same-origin',
           headers: {
             'X-CSRFToken': getCsrfToken(),
           },
           body: formData,
         });
 
-        const data = await response.json();
+        let data;
+        const text = await response.text();
+        try {
+          data = JSON.parse(text);
+        } catch (parseErr) {
+          bookingError.textContent = response.status === 403
+            ? 'Session expired. Please refresh the page and try again.'
+            : 'Server error. Please refresh and try again, or call (242) 375-4179.';
+          bookingError.hidden = false;
+          return;
+        }
 
         if (!response.ok || !data.success) {
           const errors = data.errors

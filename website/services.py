@@ -27,7 +27,7 @@ def send_booking_notification(booking: Booking):
         message=admin_body,
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[settings_obj.contact_email],
-        fail_silently=False,
+        fail_silently=True,
     )
 
     customer_subject = f"Site Visit Request Received — {booking.reference}"
@@ -38,7 +38,7 @@ def send_booking_notification(booking: Booking):
         message=customer_body,
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[booking.email],
-        fail_silently=False,
+        fail_silently=True,
     )
 
 

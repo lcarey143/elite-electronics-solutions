@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = "Create admin user from environment variables if it does not exist"
+    help = "Create or update admin user from Railway environment variables"
 
     def handle(self, *args, **options):
         username = os.environ.get("DJANGO_SUPERUSER_USERNAME", "admin")
@@ -13,12 +13,19 @@ class Command(BaseCommand):
         password = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
 
         if not password:
-            self.stdout.write("DJANGO_SUPERUSER_PASSWORD not set — skipping admin creation.")
+            self.stdout.write("DJANGO_SUPERUSER_PASSWORD not set — skipping admin setup.")
             return
 
         User = get_user_model()
-        if User.objects.filter(username=username).exists():
-            self.stdout.write(f"Admin user '{username}' already exists.")
+        user = User.objects.filter(username=username).first()
+
+        if user:
+            user.email = email
+            user.is_staff = True
+            user.is_superuser = True
+            user.set_password(password)
+            user.save()
+            self.stdout.write(self.style.SUCCESS(f"Updated admin user '{username}' password."))
             return
 
         User.objects.create_superuser(username=username, email=email, password=password)

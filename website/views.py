@@ -45,7 +45,6 @@ def home(request):
         "website/home.html",
         {
             "services": Service.objects.filter(is_active=True)[:4],
-            "videos": Video.objects.filter(is_active=True, page="home"),
         },
     )
 

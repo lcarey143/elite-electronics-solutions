@@ -28,14 +28,38 @@
 {% endblock %}
 
 {% block content %}
-<section class="section hero-section scene-3d">
+{% if site.hero_commercial_embed_url %}
+<section class="commercial-entrance" id="commercial">
+  <div class="commercial-entrance-inner">
+    <span class="section-tag">{{ site.company_name }}</span>
+    <h1 class="commercial-title">{{ site.hero_commercial_title }}</h1>
+    <div class="commercial-video-shell glass-card">
+      <div class="video-embed">
+        <iframe
+          src="{{ site.hero_commercial_embed_url }}"
+          title="{{ site.hero_commercial_title }}"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+    <p class="commercial-note">Your trusted systems integrator for security &amp; life safety in Grand Bahama</p>
+    <a href="#welcome" class="commercial-scroll">Explore our site ↓</a>
+  </div>
+</section>
+{% endif %}
+
+<section id="welcome" class="section hero-section hero-section-compact scene-3d">
+  {% if not site.hero_commercial_embed_url %}
   <canvas id="heroCanvas"></canvas>
+  {% endif %}
   <div class="hero-content layer-3d" data-depth="0.3">
     <div class="hero-badge">{{ site.tagline }}</div>
-    <h1 class="hero-title">
+    <h2 class="hero-title">
       <span class="title-line">Security &amp; Life Safety</span>
       <span class="title-line accent">Built for Grand Bahama</span>
-    </h1>
+    </h2>
     <p class="hero-subtitle">{{ site.hero_subtitle }}</p>
     <div class="hero-stats">
       {% if site.stat_projects %}<div class="hero-stat"><strong>{{ site.stat_projects }}</strong><span>Projects delivered</span></div>{% endif %}
@@ -51,6 +75,12 @@
       <li>{{ item }}</li>
       {% endfor %}
     </ul>
+    {% if not site.hero_commercial_embed_url %}
+    <div class="scroll-indicator">
+      <span>Scroll to explore</span>
+      <div class="scroll-arrow"></div>
+    </div>
+    {% endif %}
   </div>
 </section>
 
@@ -106,8 +136,6 @@
   </div>
 </section>
 
-{% include "website/includes/video_section.html" with section_title="See EES In Action" section_desc="Watch our team at work across Grand Bahama" show_header=True %}
-
 <section class="section home-preview-section">
   <div class="section-inner">
     <div class="section-header">
@@ -129,7 +157,9 @@
 {% endblock %}
 
 {% block scripts %}
+{% if not site.hero_commercial_embed_url %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+{% endif %}
 <script src="{% static 'js/mouse-tracker.js' %}"></script>
 <script src="{% static 'js/scroll-3d.js' %}"></script>
 <script src="{% static 'js/ai-assistant.js' %}"></script>

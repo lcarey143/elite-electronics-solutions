@@ -43,6 +43,8 @@ class Command(BaseCommand):
                 "stat_projects": "100+",
                 "stat_years": "10+",
                 "stat_support": "Local support",
+                "hero_commercial_url": "https://www.youtube.com/watch?v=jzTGiqlIgbg",
+                "hero_commercial_title": "Watch Our Commercial",
             },
         )
         self.stdout.write(f"Site settings: {site.company_name}")
@@ -299,8 +301,8 @@ class Command(BaseCommand):
                 "https://www.youtube.com/watch?v=9GuwGX7fbMo",
                 "Elite Electronics Solutions Showcase",
                 "See our security and life safety work in Grand Bahama.",
-                "home",
-                0,
+                "projects",
+                1,
             ),
             (
                 "https://www.youtube.com/watch?v=qd0RZdTPXrU",
@@ -322,5 +324,6 @@ class Command(BaseCommand):
                 },
             )
         self.stdout.write("Synced videos")
+        Video.objects.filter(page="home").update(is_active=False)
 
         self.stdout.write(self.style.SUCCESS("All content synced successfully."))

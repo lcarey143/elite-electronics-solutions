@@ -54,6 +54,15 @@ class SiteSettings(models.Model):
     stat_projects = models.CharField(max_length=40, default="100+", blank=True)
     stat_years = models.CharField(max_length=40, default="10+", blank=True)
     stat_support = models.CharField(max_length=40, default="Local team", blank=True)
+    hero_commercial_url = models.URLField(
+        blank=True,
+        help_text="YouTube URL for the featured commercial at the top of the home page",
+    )
+    hero_commercial_title = models.CharField(
+        max_length=120,
+        blank=True,
+        default="Watch Our Commercial",
+    )
     ai_system_prompt_extra = models.TextField(
         blank=True,
         help_text="Extra instructions for the AI assistant (optional).",
@@ -98,6 +107,12 @@ class SiteSettings(models.Model):
             "BICSI-certified professionals",
             "Local Grand Bahama team",
         ]
+
+    @property
+    def hero_commercial_embed_url(self):
+        from .youtube_utils import youtube_embed_url
+
+        return youtube_embed_url(self.hero_commercial_url, autoplay=True)
 
 
 class AboutCard(models.Model):
@@ -361,17 +376,12 @@ class Video(models.Model):
 
     @property
     def youtube_id(self):
-        import re
+        from .youtube_utils import extract_youtube_id
 
-        match = re.search(
-            r"(?:youtube\.com/watch\?v=|youtu\.be/|youtube\.com/embed/)([a-zA-Z0-9_-]{11})",
-            self.youtube_url,
-        )
-        return match.group(1) if match else ""
+        return extract_youtube_id(self.youtube_url)
 
     @property
     def embed_url(self):
-        video_id = self.youtube_id
-        if not video_id:
-            return ""
-        return f"https://www.youtube.com/embed/{video_id}"
+        from .youtube_utils import youtube_embed_url
+
+        return youtube_embed_url(self.youtube_url)

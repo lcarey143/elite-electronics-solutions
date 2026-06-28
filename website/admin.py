@@ -27,6 +27,8 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                     "company_name",
                     "tagline",
                     "hero_subtitle",
+                    "hero_commercial_url",
+                    "hero_commercial_title",
                     "meta_description",
                     "pricing_note",
                 )

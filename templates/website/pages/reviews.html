@@ -1,0 +1,33 @@
+{% extends "website/base.html" %}
+
+{% block title %}Reviews | {{ site.company_name }}{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  {% include "website/includes/page_header.html" with tag="Client Feedback" title="What Our Clients Say" description="Trusted by homeowners and businesses across Grand Bahama" %}
+
+  <section class="page-section">
+    <div class="testimonials-grid">
+      {% for testimonial in testimonials %}
+      <blockquote class="testimonial-card glass-card">
+        <div class="testimonial-stars" aria-label="{{ testimonial.rating }} out of 5 stars">
+          {% for i in "12345" %}
+            {% if forloop.counter <= testimonial.rating %}★{% else %}☆{% endif %}
+          {% endfor %}
+        </div>
+        <p>"{{ testimonial.quote }}"</p>
+        <footer>
+          <strong>{{ testimonial.client_name }}</strong>
+          <span>{{ testimonial.client_role }}</span>
+        </footer>
+      </blockquote>
+      {% endfor %}
+    </div>
+    {% if site.google_reviews_url %}
+    <div class="reviews-cta">
+      <a href="{{ site.google_reviews_url }}" target="_blank" rel="noopener" class="btn btn-outline">Read Google Reviews</a>
+    </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

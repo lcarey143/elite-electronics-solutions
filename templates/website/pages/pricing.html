@@ -1,0 +1,45 @@
+{% extends "website/base.html" %}
+
+{% block title %}Pricing | {{ site.company_name }}{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  {% include "website/includes/page_header.html" with tag="Transparent Pricing" title="Service Packages" description=site.pricing_note %}
+
+  <section class="page-section">
+    <div class="pricing-grid">
+      {% for package in pricing_packages %}
+      <div class="pricing-card glass-card{% if package.is_featured %} featured{% endif %}">
+        {% if package.is_featured and package.badge_text %}
+        <div class="pricing-badge">{{ package.badge_text }}</div>
+        {% endif %}
+        <div class="pricing-tier">{{ package.tier_name }}</div>
+        <div class="pricing-price">
+          <span class="currency">$</span>{{ package.price|floatformat:0 }}<span class="period">{{ package.price_suffix }}</span>
+        </div>
+        <p class="pricing-note">{{ package.price_note }}</p>
+        <ul class="pricing-features">
+          {% for feature in package.features %}
+          <li>{{ feature }}</li>
+          {% endfor %}
+        </ul>
+        <a href="{% url 'book' %}" class="btn {% if package.is_featured %}btn-primary{% else %}btn-outline{% endif %} btn-block">Get Quote</a>
+      </div>
+      {% endfor %}
+    </div>
+    {% if pricing_extras %}
+    <div class="pricing-extras glass-card">
+      <h3>À La Carte Services</h3>
+      <div class="extras-grid">
+        {% for extra in pricing_extras %}
+        <div class="extra-item">
+          <span>{{ extra.name }}</span>
+          <strong>{{ extra.price_label }}</strong>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

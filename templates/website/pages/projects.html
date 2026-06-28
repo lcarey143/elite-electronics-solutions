@@ -1,0 +1,49 @@
+{% extends "website/base.html" %}
+{% load static %}
+
+{% block title %}Projects | {{ site.company_name }}{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  {% include "website/includes/page_header.html" with tag="Our Work" title="Projects & Case Studies" description="Real security and life safety deployments across Freeport and Grand Bahama" %}
+
+  <section class="page-section">
+    <div class="projects-grid">
+      {% for project in projects %}
+      <article class="project-card glass-card{% if project.is_featured %} featured{% endif %}">
+        <div class="project-media">
+          {% if project.image %}
+          <img src="{% static project.image %}" alt="{{ project.title }}">
+          {% else %}
+          <div class="project-placeholder">{{ project.icon }}</div>
+          {% endif %}
+          <span class="project-type">{{ project.get_property_type_display }}</span>
+        </div>
+        <div class="project-body">
+          <p class="project-location">{{ project.location }}</p>
+          <h3>{{ project.title }}</h3>
+          <p class="project-summary">{{ project.summary }}</p>
+          <details class="project-details">
+            <summary>See project story</summary>
+            <div class="project-story">
+              <p><strong>Challenge:</strong> {{ project.challenge }}</p>
+              <p><strong>Solution:</strong> {{ project.solution }}</p>
+              <p><strong>Result:</strong> {{ project.result }}</p>
+            </div>
+          </details>
+          {% if project.services %}
+          <div class="project-tags">
+            {% for tag in project.services %}
+            <span>{{ tag }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </article>
+      {% empty %}
+      <p class="section-desc">Project highlights coming soon — add them in the admin under Projects.</p>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

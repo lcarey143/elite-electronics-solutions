@@ -1,0 +1,47 @@
+{% extends "website/base.html" %}
+
+{% block title %}Contact | {{ site.company_name }}{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  {% include "website/includes/page_header.html" with tag="Get In Touch" title="Contact Us" description="Visit our Freeport office or reach out by phone, email, or WhatsApp" %}
+
+  <section class="page-section">
+    <div class="contact-grid">
+      <div class="contact-card glass-card">
+        <div class="contact-icon">📍</div>
+        <h3>Visit Us</h3>
+        <p>{{ site.address_line1 }}<br>{{ site.address_line2 }}<br>{{ site.address_city }}<br>{{ site.address_country }}</p>
+      </div>
+      <div class="contact-card glass-card">
+        <div class="contact-icon">🕐</div>
+        <h3>Business Hours</h3>
+        <p>{{ site.hours_weekday }}<br>{{ site.hours_saturday }}<br>{{ site.hours_sunday }}</p>
+      </div>
+      <div class="contact-card glass-card">
+        <div class="contact-icon">📧</div>
+        <h3>Reach Out</h3>
+        <p>
+          Email: <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a><br>
+          Phone: <a href="tel:{{ site.phone_tel }}">{{ site.contact_phone }}</a>
+          {% if site.whatsapp_url %}<br><a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">WhatsApp us</a>{% endif %}
+        </p>
+      </div>
+    </div>
+    <div class="map-placeholder glass-card">
+      <div class="map-content">
+        <span class="map-pin">📍</span>
+        <p><strong>Millennium Mall, Freeport</strong></p>
+        <p>{{ site.address_line2 }}, {{ site.address_line1 }}</p>
+        <a href="https://maps.google.com/?q={{ site.maps_query }}" target="_blank" rel="noopener" class="btn btn-outline">Open in Google Maps</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-cta glass-card">
+    <h3>Prefer to schedule online?</h3>
+    <p>Book a free on-site assessment in under two minutes.</p>
+    <a href="{% url 'book' %}" class="btn btn-primary">Book a Site Visit</a>
+  </div>
+</div>
+{% endblock %}

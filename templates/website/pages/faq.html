@@ -1,0 +1,29 @@
+{% extends "website/base.html" %}
+
+{% block title %}FAQ | {{ site.company_name }}{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  {% include "website/includes/page_header.html" with tag="Questions" title="Frequently Asked Questions" description="Quick answers about our services, pricing, and process in Grand Bahama" %}
+
+  <section class="page-section">
+    <div class="faq-list">
+      {% for faq in faqs %}
+      <details class="faq-item glass-card">
+        <summary>{{ faq.question }}</summary>
+        <p>{{ faq.answer }}</p>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="page-cta glass-card">
+    <h3>Still have questions?</h3>
+    <p>Ask our AI assistant, call us, or book a free site visit.</p>
+    <div class="page-cta-actions">
+      <a href="{% url 'book' %}" class="btn btn-primary">Book a Visit</a>
+      <a href="{% url 'contact' %}" class="btn btn-outline">Contact Us</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

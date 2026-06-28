@@ -16,13 +16,11 @@ from .models import (
     Booking,
     Certification,
     FAQ,
-    Partner,
     PricingExtra,
     PricingPackage,
     Project,
     Service,
     ServiceOption,
-    SiteSettings,
     Testimonial,
 )
 from .services import build_ai_system_prompt, generate_booking_reference, send_booking_notification
@@ -41,22 +39,85 @@ def _send_booking_email_background(booking_id):
 
 @ensure_csrf_cookie
 def home(request):
-    site = SiteSettings.load()
-    context = {
-        "site": site,
-        "about_cards": AboutCard.objects.all(),
-        "services": Service.objects.filter(is_active=True),
-        "projects": Project.objects.filter(is_active=True),
-        "testimonials": Testimonial.objects.filter(is_active=True),
-        "faqs": FAQ.objects.filter(is_active=True),
-        "pricing_packages": PricingPackage.objects.filter(is_active=True),
-        "pricing_extras": PricingExtra.objects.filter(is_active=True),
-        "partners": Partner.objects.filter(is_active=True),
-        "certifications": Certification.objects.filter(is_active=True),
-        "service_options": ServiceOption.objects.filter(is_active=True),
-        "booking_form": BookingForm(),
-    }
-    return render(request, "website/home.html", context)
+    return render(
+        request,
+        "website/home.html",
+        {"services": Service.objects.filter(is_active=True)[:4]},
+    )
+
+
+@ensure_csrf_cookie
+def about(request):
+    return render(
+        request,
+        "website/pages/about.html",
+        {
+            "about_cards": AboutCard.objects.all(),
+            "certifications": Certification.objects.filter(is_active=True),
+        },
+    )
+
+
+@ensure_csrf_cookie
+def services(request):
+    return render(
+        request,
+        "website/pages/services.html",
+        {"services": Service.objects.filter(is_active=True)},
+    )
+
+
+@ensure_csrf_cookie
+def projects(request):
+    return render(
+        request,
+        "website/pages/projects.html",
+        {"projects": Project.objects.filter(is_active=True)},
+    )
+
+
+@ensure_csrf_cookie
+def pricing(request):
+    return render(
+        request,
+        "website/pages/pricing.html",
+        {
+            "pricing_packages": PricingPackage.objects.filter(is_active=True),
+            "pricing_extras": PricingExtra.objects.filter(is_active=True),
+        },
+    )
+
+
+@ensure_csrf_cookie
+def reviews(request):
+    return render(
+        request,
+        "website/pages/reviews.html",
+        {"testimonials": Testimonial.objects.filter(is_active=True)},
+    )
+
+
+@ensure_csrf_cookie
+def faq(request):
+    return render(
+        request,
+        "website/pages/faq.html",
+        {"faqs": FAQ.objects.filter(is_active=True)},
+    )
+
+
+@ensure_csrf_cookie
+def book(request):
+    return render(
+        request,
+        "website/pages/book.html",
+        {"service_options": ServiceOption.objects.filter(is_active=True)},
+    )
+
+
+@ensure_csrf_cookie
+def contact(request):
+    return render(request, "website/pages/contact.html")
 
 
 @require_POST

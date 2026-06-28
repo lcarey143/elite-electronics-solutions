@@ -1,555 +1,135 @@
+{% extends "website/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="{{ site.meta_description }}">
-  <meta name="keywords" content="CCTV Freeport, security systems Grand Bahama, access control Bahamas, fire alarm Freeport, SAFR facial recognition, Elite Electronics Solutions">
-  <meta property="og:title" content="{{ site.company_name }} | Security & Life Safety Systems">
-  <meta property="og:description" content="{{ site.meta_description }}">
-  <meta property="og:type" content="website">
-  <title>{{ site.company_name }} | CCTV & Security Systems — Freeport, Grand Bahama</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-  <link rel="icon" href="{% static 'assets/logo.png' %}" type="image/png">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "{{ site.company_name|escapejs }}",
-    "description": "{{ site.meta_description|escapejs }}",
-    "url": "{{ request.scheme }}://{{ request.get_host }}",
-    "telephone": "{{ site.contact_phone|escapejs }}",
-    "email": "{{ site.contact_email|escapejs }}",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "{{ site.address_line1|escapejs }}, {{ site.address_line2|escapejs }}",
-      "addressLocality": "Freeport",
-      "addressRegion": "Grand Bahama",
-      "addressCountry": "BS"
-    },
-    "areaServed": "Grand Bahama, The Bahamas",
-    "priceRange": "$$"
-  }
-  </script>
-</head>
-<body>
-  <div class="cursor-glow" id="cursorGlow"></div>
-  <div class="cursor-dot" id="cursorDot"></div>
 
-  <nav class="navbar" id="navbar">
-    <div class="nav-container">
-      <a href="#home" class="nav-logo">
-        <img src="{% static 'assets/logo.png' %}" alt="{{ site.company_name }}">
-        <span>EES</span>
+{% block body_class %}page-home{% endblock %}
+{% block main_class %}scroll-container{% endblock %}
+
+{% block head_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "{{ site.company_name|escapejs }}",
+  "description": "{{ site.meta_description|escapejs }}",
+  "url": "{{ request.scheme }}://{{ request.get_host }}",
+  "telephone": "{{ site.contact_phone|escapejs }}",
+  "email": "{{ site.contact_email|escapejs }}",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "{{ site.address_line1|escapejs }}, {{ site.address_line2|escapejs }}",
+    "addressLocality": "Freeport",
+    "addressRegion": "Grand Bahama",
+    "addressCountry": "BS"
+  },
+  "areaServed": "Grand Bahama, The Bahamas",
+  "priceRange": "$$"
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<section class="section hero-section scene-3d">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-content layer-3d" data-depth="0.3">
+    <div class="hero-badge">{{ site.tagline }}</div>
+    <h1 class="hero-title">
+      <span class="title-line">Security &amp; Life Safety</span>
+      <span class="title-line accent">Built for Grand Bahama</span>
+    </h1>
+    <p class="hero-subtitle">{{ site.hero_subtitle }}</p>
+    <div class="hero-stats">
+      {% if site.stat_projects %}<div class="hero-stat"><strong>{{ site.stat_projects }}</strong><span>Projects delivered</span></div>{% endif %}
+      {% if site.stat_years %}<div class="hero-stat"><strong>{{ site.stat_years }}</strong><span>Years experience</span></div>{% endif %}
+      {% if site.stat_support %}<div class="hero-stat"><strong>{{ site.stat_support }}</strong><span>Grand Bahama based</span></div>{% endif %}
+    </div>
+    <div class="hero-actions">
+      <a href="{% url 'book' %}" class="btn btn-primary">Book a Free Site Visit</a>
+      <a href="{% url 'services' %}" class="btn btn-outline">Explore Services</a>
+    </div>
+    <ul class="trust-strip" aria-label="Why choose EES">
+      {% for item in site.get_trust_items %}
+      <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section home-hub-section">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-tag">Explore EES</span>
+      <h2>Find What You Need</h2>
+      <p class="section-desc">Jump to a section — no endless scrolling</p>
+    </div>
+    <div class="home-hub-grid">
+      <a href="{% url 'about' %}" class="home-hub-card glass-card">
+        <span class="home-hub-icon">🛡️</span>
+        <h3>About Us</h3>
+        <p>Who we are, our partners &amp; certifications</p>
       </a>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
-        <span></span><span></span><span></span>
-      </button>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#pricing">Pricing</a></li>
-        <li><a href="#reviews">Reviews</a></li>
-        <li><a href="#partners">Partners</a></li>
-        <li><a href="#faq">FAQ</a></li>
-        <li><a href="#booking">Book Visit</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <main class="scroll-container">
-    <section id="home" class="section hero-section scene-3d">
-      <canvas id="heroCanvas"></canvas>
-      <div class="hero-content layer-3d" data-depth="0.3">
-        <div class="hero-badge">{{ site.tagline }}</div>
-        <h1 class="hero-title">
-          <span class="title-line">Security &amp; Life Safety</span>
-          <span class="title-line accent">Built for Grand Bahama</span>
-        </h1>
-        <p class="hero-subtitle">{{ site.hero_subtitle }}</p>
-        <div class="hero-stats">
-          {% if site.stat_projects %}<div class="hero-stat"><strong>{{ site.stat_projects }}</strong><span>Projects delivered</span></div>{% endif %}
-          {% if site.stat_years %}<div class="hero-stat"><strong>{{ site.stat_years }}</strong><span>Years experience</span></div>{% endif %}
-          {% if site.stat_support %}<div class="hero-stat"><strong>{{ site.stat_support }}</strong><span>Grand Bahama based</span></div>{% endif %}
-        </div>
-        <div class="hero-actions">
-          <a href="#booking" class="btn btn-primary">Book a Free Site Visit</a>
-          <a href="#services" class="btn btn-outline">Explore Services</a>
-        </div>
-        <ul class="trust-strip" aria-label="Why choose EES">
-          {% for item in site.get_trust_items %}
-          <li>{{ item }}</li>
-          {% endfor %}
-        </ul>
-        <div class="scroll-indicator">
-          <span>Scroll to explore</span>
-          <div class="scroll-arrow"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="about" class="section about-section scene-3d">
-      <div class="section-inner layer-3d" data-depth="0.15">
-        <div class="section-header">
-          <span class="section-tag">Who We Are</span>
-          <h2>Integrated Security &amp; Life Safety Experts</h2>
-        </div>
-        <div class="about-grid">
-          {% for card in about_cards %}
-          <div class="about-card glass-card">
-            <div class="about-icon">{{ card.icon }}</div>
-            <h3>{{ card.title }}</h3>
-            <p>{{ card.description }}</p>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-
-    <section id="services" class="section services-section scene-3d">
-      <div class="section-inner layer-3d" data-depth="0.2">
-        <div class="section-header">
-          <span class="section-tag">What We Do</span>
-          <h2>Our Services</h2>
-          <p class="section-desc">End-to-end systems integration for security and life safety</p>
-        </div>
-        <div class="services-grid">
-          {% for service in services %}
-          <article class="service-card" data-tilt>
-            <div class="service-icon">{{ service.icon }}</div>
-            <h3>{{ service.title }}</h3>
-            <p>{{ service.description }}</p>
-            {% if service.features %}
-            <ul>
-              {% for feature in service.features %}
-              <li>{{ feature }}</li>
-              {% endfor %}
-            </ul>
-            {% endif %}
-          </article>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-
-    <section id="projects" class="section projects-section scene-3d">
-      <div class="section-inner layer-3d" data-depth="0.16">
-        <div class="section-header">
-          <span class="section-tag">Our Work</span>
-          <h2>Projects &amp; Case Studies</h2>
-          <p class="section-desc">Real security and life safety deployments across Freeport and Grand Bahama</p>
-        </div>
-        <div class="projects-grid">
-          {% for project in projects %}
-          <article class="project-card glass-card{% if project.is_featured %} featured{% endif %}">
-            <div class="project-media">
-              {% if project.image %}
-              <img src="{% static project.image %}" alt="{{ project.title }}">
-              {% else %}
-              <div class="project-placeholder">{{ project.icon }}</div>
-              {% endif %}
-              <span class="project-type">{{ project.get_property_type_display }}</span>
-            </div>
-            <div class="project-body">
-              <p class="project-location">{{ project.location }}</p>
-              <h3>{{ project.title }}</h3>
-              <p class="project-summary">{{ project.summary }}</p>
-              <details class="project-details">
-                <summary>See project story</summary>
-                <div class="project-story">
-                  <p><strong>Challenge:</strong> {{ project.challenge }}</p>
-                  <p><strong>Solution:</strong> {{ project.solution }}</p>
-                  <p><strong>Result:</strong> {{ project.result }}</p>
-                </div>
-              </details>
-              {% if project.services %}
-              <div class="project-tags">
-                {% for tag in project.services %}
-                <span>{{ tag }}</span>
-                {% endfor %}
-              </div>
-              {% endif %}
-            </div>
-          </article>
-          {% empty %}
-          <p class="section-desc">Project highlights coming soon — add them in the admin under Projects.</p>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-
-    <section id="pricing" class="section pricing-section scene-3d">
-      <div class="section-inner layer-3d" data-depth="0.18">
-        <div class="section-header">
-          <span class="section-tag">Transparent Pricing</span>
-          <h2>Service Packages</h2>
-          <p class="section-desc">{{ site.pricing_note }}</p>
-        </div>
-        <div class="pricing-grid">
-          {% for package in pricing_packages %}
-          <div class="pricing-card glass-card{% if package.is_featured %} featured{% endif %}">
-            {% if package.is_featured and package.badge_text %}
-            <div class="pricing-badge">{{ package.badge_text }}</div>
-            {% endif %}
-            <div class="pricing-tier">{{ package.tier_name }}</div>
-            <div class="pricing-price">
-              <span class="currency">$</span>{{ package.price|floatformat:0 }}<span class="period">{{ package.price_suffix }}</span>
-            </div>
-            <p class="pricing-note">{{ package.price_note }}</p>
-            <ul class="pricing-features">
-              {% for feature in package.features %}
-              <li>{{ feature }}</li>
-              {% endfor %}
-            </ul>
-            <a href="#booking" class="btn {% if package.is_featured %}btn-primary{% else %}btn-outline{% endif %} btn-block">Get Quote</a>
-          </div>
-          {% endfor %}
-        </div>
-        {% if pricing_extras %}
-        <div class="pricing-extras glass-card">
-          <h3>À La Carte Services</h3>
-          <div class="extras-grid">
-            {% for extra in pricing_extras %}
-            <div class="extra-item">
-              <span>{{ extra.name }}</span>
-              <strong>{{ extra.price_label }}</strong>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-        {% endif %}
-      </div>
-    </section>
-
-    <section id="partners" class="section partners-section scene-3d">
-      <div class="section-inner layer-3d" data-depth="0.12">
-        <div class="section-header">
-          <span class="section-tag">Authorized Reseller &amp; Installer</span>
-          <h2>Our Technology Partners</h2>
-          <p class="section-desc">We install, integrate, and support industry-leading security and life safety platforms</p>
-        </div>
-        <div class="partners-grid">
-          {% for partner in partners %}
-          <div class="partner-card glass-card">
-            {% if partner.logo %}
-            <div class="partner-logo-img">
-              <img src="{% static partner.logo %}" alt="{{ partner.name }}">
-            </div>
-            {% else %}
-            <div class="partner-logo-text">{{ partner.abbreviation }}</div>
-            {% endif %}
-            <span class="partner-type-badge">{{ partner.get_partner_type_display }}</span>
-            <h3>{{ partner.name }}</h3>
-            <p>{{ partner.description }}</p>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-
-    <section id="credentials" class="section credentials-section scene-3d">
-      <div class="section-inner layer-3d" data-depth="0.12">
-        <div class="section-header">
-          <span class="section-tag">Trusted Expertise</span>
-          <h2>Certifications &amp; Credentials</h2>
-          <p class="section-desc">Industry-certified professionals delivering code-compliant, secure installations</p>
-        </div>
-        <div class="credentials-grid">
-          {% for cert in certifications %}
-          <div class="credential-card glass-card">
-            <div class="credential-image">
-              <img src="{% static cert.image %}" alt="{{ cert.name }}">
-            </div>
-            <div class="credential-info">
-              <span class="credential-category">{{ cert.get_category_display }}</span>
-              <h3>{{ cert.name }}</h3>
-              {% if cert.issuer %}<p class="credential-issuer">{{ cert.issuer }}</p>{% endif %}
-              {% if cert.description %}<p>{{ cert.description }}</p>{% endif %}
-              {% if cert.valid_until %}<p class="credential-valid">Valid: {{ cert.valid_until }}</p>{% endif %}
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-
-    <section id="reviews" class="section reviews-section scene-3d">
-      <div class="section-inner layer-3d" data-depth="0.12">
-        <div class="section-header">
-          <span class="section-tag">Client Feedback</span>
-          <h2>What Our Clients Say</h2>
-          <p class="section-desc">Trusted by homeowners and businesses across Grand Bahama</p>
-        </div>
-        <div class="testimonials-grid">
-          {% for testimonial in testimonials %}
-          <blockquote class="testimonial-card glass-card">
-            <div class="testimonial-stars" aria-label="{{ testimonial.rating }} out of 5 stars">
-              {% for i in "12345" %}
-                {% if forloop.counter <= testimonial.rating %}★{% else %}☆{% endif %}
-              {% endfor %}
-            </div>
-            <p>"{{ testimonial.quote }}"</p>
-            <footer>
-              <strong>{{ testimonial.client_name }}</strong>
-              <span>{{ testimonial.client_role }}</span>
-            </footer>
-          </blockquote>
-          {% endfor %}
-        </div>
-        {% if site.google_reviews_url %}
-        <div class="reviews-cta">
-          <a href="{{ site.google_reviews_url }}" target="_blank" rel="noopener" class="btn btn-outline">Read Google Reviews</a>
-        </div>
-        {% endif %}
-      </div>
-    </section>
-
-    <section id="faq" class="section faq-section scene-3d">
-      <div class="section-inner layer-3d" data-depth="0.1">
-        <div class="section-header">
-          <span class="section-tag">Questions</span>
-          <h2>Frequently Asked Questions</h2>
-          <p class="section-desc">Quick answers about our services, pricing, and process in Grand Bahama</p>
-        </div>
-        <div class="faq-list">
-          {% for faq in faqs %}
-          <details class="faq-item glass-card">
-            <summary>{{ faq.question }}</summary>
-            <p>{{ faq.answer }}</p>
-          </details>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-
-    <section id="booking" class="section booking-section scene-3d">
-      <div class="section-inner layer-3d" data-depth="0.15">
-        <div class="section-header">
-          <span class="section-tag">Schedule With Us</span>
-          <h2>Book a Site Visit</h2>
-          <p class="section-desc">Tell us about your project and we'll schedule a free on-site assessment</p>
-        </div>
-        <div class="booking-layout" id="bookingLayout">
-          <form class="booking-form glass-card" id="bookingForm" method="post" action="{% url 'submit_booking' %}">
-            {% csrf_token %}
-            <div class="form-row">
-              <div class="form-group">
-                <label for="id_full_name">Full Name *</label>
-                <input type="text" id="id_full_name" name="full_name" required placeholder="John Smith">
-              </div>
-              <div class="form-group">
-                <label for="id_email">Email *</label>
-                <input type="email" id="id_email" name="email" required placeholder="john@example.com">
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="id_phone">Phone *</label>
-                <input type="tel" id="id_phone" name="phone" required placeholder="+1 (242) 375-4179">
-              </div>
-              <div class="form-group">
-                <label for="id_property_type">Property Type *</label>
-                <select id="id_property_type" name="property_type" required>
-                  <option value="">Select type</option>
-                  <option value="residential">Residential</option>
-                  <option value="small-business">Small Business</option>
-                  <option value="commercial">Commercial</option>
-                  <option value="industrial">Industrial</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Services Needed *</label>
-              <div class="checkbox-group" id="servicesCheckboxes">
-                {% for option in service_options %}
-                <label>
-                  <input type="checkbox" name="services" value="{{ option.value }}"> {{ option.label }}
-                </label>
-                {% endfor %}
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="id_preferred_date">Preferred Date *</label>
-                <input type="date" id="id_preferred_date" name="preferred_date" required>
-              </div>
-              <div class="form-group">
-                <label for="id_preferred_time">Preferred Time *</label>
-                <select id="id_preferred_time" name="preferred_time" required>
-                  <option value="">Select time</option>
-                  <option value="morning">Morning (8 AM – 12 PM)</option>
-                  <option value="afternoon">Afternoon (12 PM – 4 PM)</option>
-                  <option value="evening">Evening (4 PM – 6 PM)</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="id_address">Site Address *</label>
-              <input type="text" id="id_address" name="address" required placeholder="Your property address in Freeport or Grand Bahama">
-            </div>
-            <div class="form-group">
-              <label for="id_message">Project Details</label>
-              <textarea id="id_message" name="message" rows="4" placeholder="Describe your project, number of cameras, doors, building size, etc."></textarea>
-            </div>
-            <div class="form-error" id="bookingError" hidden></div>
-            <button type="submit" class="btn btn-primary btn-block" id="bookingSubmit">Submit Booking Request</button>
-          </form>
-          <div class="booking-info" id="bookingInfo">
-            <div class="info-card glass-card">
-              <h3>What to Expect</h3>
-              <ol>
-                <li>Submit your booking request below</li>
-                <li>Our team confirms within 24 hours</li>
-                <li>Free on-site assessment at your location</li>
-                <li>Detailed quote tailored to your needs</li>
-              </ol>
-            </div>
-            <div class="info-card glass-card">
-              <h3>Service Area</h3>
-              <p>We primarily serve <strong>Freeport</strong> and <strong>Grand Bahama</strong>, with projects available across The Bahamas for commercial clients.</p>
-            </div>
-          </div>
-        </div>
-        <div class="booking-success glass-card" id="bookingSuccess" hidden>
-          <div class="success-icon">✓</div>
-          <h3>Booking Request Received!</h3>
-          <p id="bookingSuccessMessage">Thank you! Our team will contact you within 24 hours to confirm your site visit.</p>
-          <p id="bookingEmailNote" class="contact-note" hidden>A confirmation email has been sent to your inbox.</p>
-          <p class="success-ref">Reference: <span id="bookingRef"></span></p>
-        </div>
-      </div>
-    </section>
-
-    <section id="contact" class="section contact-section scene-3d">
-      <div class="section-inner layer-3d" data-depth="0.1">
-        <div class="section-header">
-          <span class="section-tag">Get In Touch</span>
-          <h2>Contact Us</h2>
-        </div>
-        <div class="contact-grid">
-          <div class="contact-card glass-card">
-            <div class="contact-icon">📍</div>
-            <h3>Visit Us</h3>
-            <p>{{ site.address_line1 }}<br>{{ site.address_line2 }}<br>{{ site.address_city }}<br>{{ site.address_country }}</p>
-          </div>
-          <div class="contact-card glass-card">
-            <div class="contact-icon">🕐</div>
-            <h3>Business Hours</h3>
-            <p>{{ site.hours_weekday }}<br>{{ site.hours_saturday }}<br>{{ site.hours_sunday }}</p>
-          </div>
-          <div class="contact-card glass-card">
-            <div class="contact-icon">📧</div>
-            <h3>Reach Out</h3>
-            <p>Email: <a href="mailto:{{ site.contact_email }}" style="color: var(--green-lime);">{{ site.contact_email }}</a><br>Phone: <a href="tel:{{ site.contact_phone }}" style="color: var(--green-lime);">{{ site.contact_phone }}</a></p>
-          </div>
-        </div>
-        <div class="map-placeholder glass-card">
-          <div class="map-content">
-            <span class="map-pin">📍</span>
-            <p><strong>Millennium Mall, Freeport</strong></p>
-            <p>{{ site.address_line2 }}, {{ site.address_line1 }}</p>
-            <a href="https://maps.google.com/?q={{ site.maps_query }}" target="_blank" rel="noopener" class="btn btn-outline">Open in Google Maps</a>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <div class="sticky-contact" id="stickyContact" aria-label="Quick contact">
-    <a href="tel:{{ site.phone_tel }}" class="sticky-btn sticky-call">
-      <span aria-hidden="true">📞</span> Call
-    </a>
-    {% if site.whatsapp_url %}
-    <a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener" class="sticky-btn sticky-whatsapp">
-      <span aria-hidden="true">💬</span> WhatsApp
-    </a>
-    {% endif %}
-    <a href="#booking" class="sticky-btn sticky-book btn-primary">Book Visit</a>
-  </div>
-
-  <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-brand">
-        <img src="{% static 'assets/logo.png' %}" alt="EES Logo">
-        <p>{{ site.company_name }} — Your trusted systems integrator for security and life safety in The Bahamas.</p>
-      </div>
-      <div class="footer-links">
-        <h4>Quick Links</h4>
-        <a href="#services">Services</a>
-        <a href="#projects">Projects</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#reviews">Reviews</a>
-        <a href="#faq">FAQ</a>
-        <a href="#booking">Book Visit</a>
-        <a href="#contact">Contact</a>
-      </div>
-      <div class="footer-links">
-        <h4>Partners</h4>
-        {% for partner in partners %}
-        <span>{{ partner.name }}</span>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; {% now "Y" %} {{ site.company_name }}. All rights reserved.</p>
-    </div>
-  </footer>
-
-  <button class="ai-toggle" id="aiToggle" aria-label="Open AI assistant">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-    </svg>
-    <span class="ai-pulse"></span>
-  </button>
-
-  <div class="ai-panel" id="aiPanel" hidden>
-    <div class="ai-header">
-      <div class="ai-header-info">
-        <div class="ai-avatar">AI</div>
-        <div>
-          <strong>EES Assistant</strong>
-          <span>Powered by AI · Ask me anything</span>
-        </div>
-      </div>
-      <button class="ai-close" id="aiClose" aria-label="Close assistant">&times;</button>
-    </div>
-    <div class="ai-messages" id="aiMessages">
-      <div class="ai-msg bot">
-        <p>Hello! I'm the EES Assistant. I can help with questions about our services, pricing, booking a site visit, partners, location, and more. How can I help you today?</p>
-      </div>
-    </div>
-    <form class="ai-input-form" id="aiForm">
-      <input type="text" id="aiInput" placeholder="Ask about services, pricing, booking..." autocomplete="off">
-      <button type="submit" aria-label="Send message">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-      </button>
-    </form>
-    <div class="ai-suggestions" id="aiSuggestions">
-      <button type="button" data-q="What services do you offer?">Services</button>
-      <button type="button" data-q="How much does CCTV cost?">CCTV Pricing</button>
-      <button type="button" data-q="How do I book a site visit?">Book Visit</button>
-      <button type="button" data-q="Where are you located?">Location</button>
+      <a href="{% url 'services' %}" class="home-hub-card glass-card">
+        <span class="home-hub-icon">📹</span>
+        <h3>Services</h3>
+        <p>CCTV, access control, fire alarms &amp; more</p>
+      </a>
+      <a href="{% url 'projects' %}" class="home-hub-card glass-card">
+        <span class="home-hub-icon">🏗️</span>
+        <h3>Projects</h3>
+        <p>Case studies from across Grand Bahama</p>
+      </a>
+      <a href="{% url 'pricing' %}" class="home-hub-card glass-card">
+        <span class="home-hub-icon">💰</span>
+        <h3>Pricing</h3>
+        <p>Transparent packages &amp; à la carte options</p>
+      </a>
+      <a href="{% url 'reviews' %}" class="home-hub-card glass-card">
+        <span class="home-hub-icon">⭐</span>
+        <h3>Reviews</h3>
+        <p>What our clients say about EES</p>
+      </a>
+      <a href="{% url 'faq' %}" class="home-hub-card glass-card">
+        <span class="home-hub-icon">❓</span>
+        <h3>FAQ</h3>
+        <p>Common questions answered</p>
+      </a>
+      <a href="{% url 'book' %}" class="home-hub-card glass-card featured">
+        <span class="home-hub-icon">📅</span>
+        <h3>Book a Visit</h3>
+        <p>Free on-site assessment — schedule now</p>
+      </a>
+      <a href="{% url 'contact' %}" class="home-hub-card glass-card">
+        <span class="home-hub-icon">📍</span>
+        <h3>Contact</h3>
+        <p>Location, hours &amp; directions</p>
+      </a>
     </div>
   </div>
+</section>
 
-  <script>
-    window.EES_CONFIG = {
-      bookingUrl: "{% url 'submit_booking' %}",
-      aiChatUrl: "{% url 'ai_chat' %}",
-      csrfToken: "{{ csrf_token }}"
-    };
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="{% static 'js/mouse-tracker.js' %}"></script>
-  <script src="{% static 'js/scroll-3d.js' %}"></script>
-  <script src="{% static 'js/ai-assistant.js' %}"></script>
-  <script src="{% static 'js/main.js' %}"></script>
-</body>
-</html>
+<section class="section home-preview-section">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-tag">Popular Services</span>
+      <h2>What We Install</h2>
+      <p class="section-desc"><a href="{% url 'services' %}" style="color: var(--green-lime);">View all services →</a></p>
+    </div>
+    <div class="services-grid services-grid-compact">
+      {% for service in services|slice:":4" %}
+      <article class="service-card glass-card">
+        <div class="service-icon">{{ service.icon }}</div>
+        <h3>{{ service.title }}</h3>
+        <p>{{ service.description|truncatewords:24 }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="{% static 'js/mouse-tracker.js' %}"></script>
+<script src="{% static 'js/scroll-3d.js' %}"></script>
+<script src="{% static 'js/ai-assistant.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "website/base.html" %}
+{% load static %}
+
+{% block title %}About Us | {{ site.company_name }}{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  {% include "website/includes/page_header.html" with tag="Who We Are" title="Integrated Security & Life Safety Experts" description="Full-scope integration for homes and businesses across Grand Bahama" %}
+
+  <section class="page-section">
+    <div class="about-grid">
+      {% for card in about_cards %}
+      <div class="about-card glass-card">
+        <div class="about-icon">{{ card.icon }}</div>
+        <h3>{{ card.title }}</h3>
+        <p>{{ card.description }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="section-header section-header-left">
+      <span class="section-tag">Technology Partners</span>
+      <h2>Authorized Reseller &amp; Installer</h2>
+    </div>
+    <div class="partners-grid">
+      {% for partner in partners %}
+      <div class="partner-card glass-card">
+        {% if partner.logo %}
+        <div class="partner-logo-img">
+          <img src="{% static partner.logo %}" alt="{{ partner.name }}">
+        </div>
+        {% else %}
+        <div class="partner-logo-text">{{ partner.abbreviation }}</div>
+        {% endif %}
+        <span class="partner-type-badge">{{ partner.get_partner_type_display }}</span>
+        <h3>{{ partner.name }}</h3>
+        <p>{{ partner.description }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="section-header section-header-left">
+      <span class="section-tag">Trusted Expertise</span>
+      <h2>Certifications &amp; Credentials</h2>
+    </div>
+    <div class="credentials-grid">
+      {% for cert in certifications %}
+      <div class="credential-card glass-card">
+        <div class="credential-image">
+          <img src="{% static cert.image %}" alt="{{ cert.name }}">
+        </div>
+        <div class="credential-info">
+          <span class="credential-category">{{ cert.get_category_display }}</span>
+          <h3>{{ cert.name }}</h3>
+          {% if cert.issuer %}<p class="credential-issuer">{{ cert.issuer }}</p>{% endif %}
+          {% if cert.description %}<p>{{ cert.description }}</p>{% endif %}
+          {% if cert.valid_until %}<p class="credential-valid">Valid: {{ cert.valid_until }}</p>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="page-cta glass-card">
+    <h3>Ready to get started?</h3>
+    <p>Book a free site visit and we'll assess your property in person.</p>
+    <a href="{% url 'book' %}" class="btn btn-primary">Book a Site Visit</a>
+  </div>
+</div>
+{% endblock %}

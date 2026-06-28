@@ -1048,12 +1048,63 @@ a, button, input, select, textarea, label {
   box-shadow: 0 6px 30px rgba(0, 0, 0, 0.5), 0 0 40px var(--green-glow);
 }
 
+.ai-toggle.ptz-toggle {
+  width: 92px;
+  height: 108px;
+  padding: 0.35rem 0.5rem 0.5rem;
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at 50% 85%, rgba(10, 31, 28, 0.98) 0%, rgba(10, 31, 28, 0.82) 55%, transparent 100%);
+  border: 1px solid rgba(124, 252, 0, 0.35);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.5),
+    0 0 24px rgba(124, 252, 0, 0.18);
+}
+
+.ai-toggle.ptz-toggle:hover {
+  transform: scale(1.06) translateY(-2px);
+  border-color: rgba(124, 252, 0, 0.55);
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.55),
+    0 0 36px rgba(124, 252, 0, 0.28);
+}
+
+.ptz-camera {
+  position: relative;
+  width: 76px;
+  height: 78px;
+  display: block;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.45));
+}
+
+.ptz-base,
+.ptz-head {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.ptz-head {
+  transform-origin: 50% 61.5%;
+  will-change: transform;
+}
+
 .ai-pulse {
   position: absolute;
   inset: -4px;
   border-radius: 50%;
   border: 2px solid var(--green-lime);
   animation: pulse-ring 2s infinite;
+  pointer-events: none;
+}
+
+.ai-toggle.ptz-toggle .ai-pulse {
+  inset: -5px;
+  border-radius: 18px;
 }
 
 @keyframes pulse-ring {
@@ -1109,6 +1160,20 @@ a, button, input, select, textarea, label {
   font-weight: 700;
   font-size: 0.75rem;
   color: var(--teal-dark);
+}
+
+.ai-avatar.ai-avatar-ptz {
+  background: rgba(10, 31, 28, 0.9);
+  border: 1px solid rgba(124, 252, 0, 0.25);
+  padding: 4px;
+}
+
+.ai-avatar.ai-avatar-ptz svg,
+.ai-avatar.ai-avatar-ptz img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
 }
 
 .ai-header-info strong {
@@ -1929,6 +1994,16 @@ a, button, input, select, textarea, label {
   .ai-toggle {
     bottom: 5.5rem;
     right: 1.5rem;
+  }
+
+  .ai-toggle.ptz-toggle {
+    width: 80px;
+    height: 94px;
+  }
+
+  .ai-toggle.ptz-toggle .ptz-camera {
+    width: 66px;
+    height: 68px;
   }
 }
 

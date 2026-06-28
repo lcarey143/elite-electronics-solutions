@@ -82,17 +82,35 @@
     </div>
   </footer>
 
-  <button class="ai-toggle" id="aiToggle" aria-label="Open AI assistant">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-    </svg>
+  <button class="ai-toggle ptz-toggle" id="aiToggle" aria-label="Open EES Assistant">
+    <div class="ptz-camera">
+      <img
+        class="ptz-base"
+        src="{% static 'images/axis-ptz-base.png' %}"
+        alt=""
+        width="494"
+        height="505"
+        decoding="async"
+      >
+      <img
+        class="ptz-head"
+        id="ptzHead"
+        src="{% static 'images/axis-ptz-head.png' %}"
+        alt=""
+        width="494"
+        height="505"
+        decoding="async"
+      >
+    </div>
     <span class="ai-pulse"></span>
   </button>
 
   <div class="ai-panel" id="aiPanel" hidden>
     <div class="ai-header">
       <div class="ai-header-info">
-        <div class="ai-avatar">AI</div>
+        <div class="ai-avatar ai-avatar-ptz" aria-hidden="true">
+          <img src="{% static 'images/axis-ptz-full.png' %}" alt="" width="494" height="505" decoding="async">
+        </div>
         <div>
           <strong>EES Assistant</strong>
           <span>Powered by AI · Ask me anything</span>
@@ -129,6 +147,7 @@
   {% block scripts %}
   <script src="{% static 'js/mouse-tracker.js' %}"></script>
   <script src="{% static 'js/scroll-3d.js' %}"></script>
+  <script src="{% static 'js/ptz-tracker.js' %}"></script>
   <script src="{% static 'js/ai-assistant.js' %}"></script>
   <script src="{% static 'js/main.js' %}"></script>
   {% endblock %}

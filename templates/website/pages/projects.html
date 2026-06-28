@@ -7,6 +7,8 @@
 <div class="page-wrap">
   {% include "website/includes/page_header.html" with tag="Our Work" title="Projects & Case Studies" description="Real security and life safety deployments across Freeport and Grand Bahama" %}
 
+  {% include "website/includes/video_section.html" with compact=True section_title="Project Videos" section_desc="Installations and site work from our team" show_header=True %}
+
   <section class="page-section">
     <div class="projects-grid">
       {% for project in projects %}

@@ -1,0 +1,33 @@
+{% if videos %}
+<section class="{% if compact %}page-section{% else %}section home-videos-section{% endif %}">
+  {% if show_header %}
+  <div class="section-header{% if compact %} section-header-left{% endif %}">
+    <span class="section-tag">Video</span>
+    <h2{% if not compact %} class="section-title-inline"{% endif %}>{% if section_title %}{{ section_title }}{% else %}See Our Work{% endif %}</h2>
+    {% if section_desc %}<p class="section-desc">{{ section_desc }}</p>{% endif %}
+  </div>
+  {% endif %}
+  <div class="video-grid{% if videos|length == 1 %} video-grid-single{% endif %}">
+    {% for video in videos %}
+    <article class="video-card glass-card">
+      {% if video.embed_url %}
+      <div class="video-embed">
+        <iframe
+          src="{{ video.embed_url }}"
+          title="{{ video.title }}"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+      </div>
+      {% endif %}
+      <div class="video-body">
+        <h3>{{ video.title }}</h3>
+        {% if video.description %}<p>{{ video.description }}</p>{% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}

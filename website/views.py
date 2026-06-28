@@ -22,6 +22,7 @@ from .models import (
     Service,
     ServiceOption,
     Testimonial,
+    Video,
 )
 from .services import build_ai_system_prompt, generate_booking_reference, send_booking_notification
 
@@ -42,7 +43,10 @@ def home(request):
     return render(
         request,
         "website/home.html",
-        {"services": Service.objects.filter(is_active=True)[:4]},
+        {
+            "services": Service.objects.filter(is_active=True)[:4],
+            "videos": Video.objects.filter(is_active=True, page="home"),
+        },
     )
 
 
@@ -72,7 +76,10 @@ def projects(request):
     return render(
         request,
         "website/pages/projects.html",
-        {"projects": Project.objects.filter(is_active=True)},
+        {
+            "projects": Project.objects.filter(is_active=True),
+            "videos": Video.objects.filter(is_active=True, page="projects"),
+        },
     )
 
 

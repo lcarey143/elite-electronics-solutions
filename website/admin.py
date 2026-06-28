@@ -13,6 +13,7 @@ from .models import (
     ServiceOption,
     SiteSettings,
     Testimonial,
+    Video,
 )
 
 
@@ -134,6 +135,14 @@ class FAQAdmin(admin.ModelAdmin):
     list_display = ("question", "order", "is_active")
     list_editable = ("order", "is_active")
     search_fields = ("question", "answer")
+
+
+@admin.register(Video)
+class VideoAdmin(admin.ModelAdmin):
+    list_display = ("title", "page", "order", "is_active")
+    list_editable = ("order", "is_active", "page")
+    list_filter = ("is_active", "page")
+    search_fields = ("title", "description", "youtube_url")
 
 
 @admin.register(Booking)

@@ -336,3 +336,42 @@ class FAQ(models.Model):
 
     def __str__(self):
         return self.question
+
+
+class Video(models.Model):
+    PAGE_CHOICES = [
+        ("home", "Home"),
+        ("about", "About"),
+        ("services", "Services"),
+        ("projects", "Projects"),
+    ]
+
+    title = models.CharField(max_length=160)
+    youtube_url = models.URLField(help_text="Full YouTube URL, e.g. https://www.youtube.com/watch?v=...")
+    description = models.TextField(blank=True)
+    page = models.CharField(max_length=20, choices=PAGE_CHOICES, default="home")
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def youtube_id(self):
+        import re
+
+        match = re.search(
+            r"(?:youtube\.com/watch\?v=|youtu\.be/|youtube\.com/embed/)([a-zA-Z0-9_-]{11})",
+            self.youtube_url,
+        )
+        return match.group(1) if match else ""
+
+    @property
+    def embed_url(self):
+        video_id = self.youtube_id
+        if not video_id:
+            return ""
+        return f"https://www.youtube.com/embed/{video_id}"

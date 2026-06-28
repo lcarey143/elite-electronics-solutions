@@ -14,6 +14,7 @@ from website.models import (
     ServiceOption,
     SiteSettings,
     Testimonial,
+    Video,
 )
 
 
@@ -292,5 +293,34 @@ class Command(BaseCommand):
                 defaults={"answer": answer, "order": i, "is_active": True},
             )
         self.stdout.write("Synced FAQs")
+
+        video_defaults = [
+            (
+                "https://www.youtube.com/watch?v=9GuwGX7fbMo",
+                "Elite Electronics Solutions Showcase",
+                "See our security and life safety work in Grand Bahama.",
+                "home",
+                0,
+            ),
+            (
+                "https://www.youtube.com/watch?v=qd0RZdTPXrU",
+                "Installation Highlights",
+                "Project footage from the field — cameras, systems, and integrations.",
+                "projects",
+                0,
+            ),
+        ]
+        for url, title, description, page, order in video_defaults:
+            Video.objects.update_or_create(
+                youtube_url=url,
+                defaults={
+                    "title": title,
+                    "description": description,
+                    "page": page,
+                    "order": order,
+                    "is_active": True,
+                },
+            )
+        self.stdout.write("Synced videos")
 
         self.stdout.write(self.style.SUCCESS("All content synced successfully."))

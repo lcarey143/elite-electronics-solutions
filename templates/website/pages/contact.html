@@ -1,4 +1,5 @@
 {% extends "website/base.html" %}
+{% load site_icons %}
 
 {% block title %}Contact | {{ site.company_name }}{% endblock %}
 
@@ -9,17 +10,17 @@
   <section class="page-section">
     <div class="contact-grid">
       <div class="contact-card glass-card">
-        <div class="contact-icon">📍</div>
+        <div class="contact-icon">{% site_icon "map" %}</div>
         <h3>Visit Us</h3>
         <p>{{ site.address_line1 }}<br>{{ site.address_line2 }}<br>{{ site.address_city }}<br>{{ site.address_country }}</p>
       </div>
       <div class="contact-card glass-card">
-        <div class="contact-icon">🕐</div>
+        <div class="contact-icon">{% site_icon "clock" %}</div>
         <h3>Business Hours</h3>
         <p>{{ site.hours_weekday }}<br>{{ site.hours_saturday }}<br>{{ site.hours_sunday }}</p>
       </div>
       <div class="contact-card glass-card">
-        <div class="contact-icon">📧</div>
+        <div class="contact-icon">{% site_icon "mail" %}</div>
         <h3>Reach Out</h3>
         <p>
           Email: <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a><br>
@@ -30,7 +31,7 @@
     </div>
     <div class="map-placeholder glass-card">
       <div class="map-content">
-        <span class="map-pin">📍</span>
+        <span class="map-pin">{% site_icon "map" %}</span>
         <p><strong>Millennium Mall, Freeport</strong></p>
         <p>{{ site.address_line2 }}, {{ site.address_line1 }}</p>
         <a href="https://maps.google.com/?q={{ site.maps_query }}" target="_blank" rel="noopener" class="btn btn-outline">Open in Google Maps</a>

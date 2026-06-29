@@ -130,8 +130,10 @@ a, button, input, select, textarea, label {
 }
 
 .nav-logo img {
-  height: 44px;
+  height: 48px;
   width: auto;
+  max-width: min(220px, 42vw);
+  object-fit: contain;
 }
 
 .nav-logo span {
@@ -406,8 +408,10 @@ a, button, input, select, textarea, label {
 }
 
 .about-icon {
-  font-size: 2.5rem;
+  display: flex;
+  justify-content: center;
   margin-bottom: 1rem;
+  color: var(--green-lime);
 }
 
 .about-card h3 {
@@ -447,8 +451,9 @@ a, button, input, select, textarea, label {
 }
 
 .service-icon {
-  font-size: 2rem;
+  display: flex;
   margin-bottom: 1rem;
+  color: var(--green-lime);
 }
 
 .service-card h3 {
@@ -918,8 +923,10 @@ a, button, input, select, textarea, label {
 }
 
 .contact-icon {
-  font-size: 2rem;
+  display: flex;
+  justify-content: center;
   margin-bottom: 0.75rem;
+  color: var(--green-lime);
 }
 
 .contact-card h3 {
@@ -945,9 +952,10 @@ a, button, input, select, textarea, label {
 }
 
 .map-content .map-pin {
-  font-size: 3rem;
-  display: block;
+  display: flex;
+  justify-content: center;
   margin-bottom: 1rem;
+  color: var(--green-lime);
 }
 
 .map-content p {
@@ -976,7 +984,10 @@ a, button, input, select, textarea, label {
 }
 
 .footer-brand img {
-  height: 50px;
+  height: 56px;
+  width: auto;
+  max-width: 240px;
+  object-fit: contain;
   margin-bottom: 1rem;
 }
 
@@ -1017,6 +1028,61 @@ a, button, input, select, textarea, label {
 .footer-bottom p {
   color: var(--text-muted);
   font-size: 0.85rem;
+}
+
+/* Professional SVG icons */
+.ees-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green-lime);
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+.ees-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.ees-icon--sm svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.ees-icon--md svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.ees-icon--lg svg {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.about-icon .ees-icon svg,
+.service-icon .ees-icon svg,
+.home-hub-icon .ees-icon svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.contact-icon .ees-icon svg,
+.map-pin .ees-icon svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.project-placeholder .ees-icon svg {
+  width: 3rem;
+  height: 3rem;
+  opacity: 0.85;
+}
+
+.map-pin {
+  display: flex;
+  justify-content: center;
+  color: var(--green-lime);
 }
 
 /* AI Assistant */
@@ -1728,9 +1794,9 @@ a, button, input, select, textarea, label {
 }
 
 .home-hub-icon {
-  font-size: 2rem;
-  display: block;
+  display: flex;
   margin-bottom: 0.75rem;
+  color: var(--green-lime);
 }
 
 .home-hub-card h3 {

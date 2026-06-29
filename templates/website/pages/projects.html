@@ -1,5 +1,6 @@
 {% extends "website/base.html" %}
 {% load static %}
+{% load site_icons %}
 
 {% block title %}Projects | {{ site.company_name }}{% endblock %}
 
@@ -17,7 +18,7 @@
           {% if project.image %}
           <img src="{% static project.image %}" alt="{{ project.title }}">
           {% else %}
-          <div class="project-placeholder">{{ project.icon }}</div>
+          <div class="project-placeholder">{% site_icon project.icon size="lg" %}</div>
           {% endif %}
           <span class="project-type">{{ project.get_property_type_display }}</span>
         </div>

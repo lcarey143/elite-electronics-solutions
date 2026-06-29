@@ -49,27 +49,29 @@ class Command(BaseCommand):
         )
         self.stdout.write(f"Site settings: {site.company_name}")
 
-        if not AboutCard.objects.exists():
-            cards = [
-                ("🛡️", "Full-Scope Integration", "We design, install, configure, and maintain complete security and life safety ecosystems — CCTV, access control, fire alarms, monitoring, and communications."),
-                ("🏢", "Residential to Commercial", "From small home CCTV setups to large-scale commercial installations across Grand Bahama and beyond — every project gets elite attention."),
-                ("🎓", "Training & Support", "We train your staff on system operation, provide ongoing support, and develop custom software solutions tailored to your facility."),
-                ("📡", "Infrastructure & Servers", "Copper cabling, optical fiber, microwave, point-to-point links, radio communications, and complete server setups for your network backbone."),
-            ]
-            for i, (icon, title, desc) in enumerate(cards):
-                AboutCard.objects.create(icon=icon, title=title, description=desc, order=i)
-            self.stdout.write("Created about cards")
+        about_defaults = [
+            ("shield", "Full-Scope Integration", "We design, install, configure, and maintain complete security and life safety ecosystems — CCTV, access control, fire alarms, monitoring, and communications."),
+            ("building", "Residential to Commercial", "From small home CCTV setups to large-scale commercial installations across Grand Bahama and beyond — every project gets elite attention."),
+            ("training", "Training & Support", "We train your staff on system operation, provide ongoing support, and develop custom software solutions tailored to your facility."),
+            ("network", "Infrastructure & Servers", "Copper cabling, optical fiber, microwave, point-to-point links, radio communications, and complete server setups for your network backbone."),
+        ]
+        for i, (icon, title, desc) in enumerate(about_defaults):
+            AboutCard.objects.update_or_create(
+                title=title,
+                defaults={"icon": icon, "description": desc, "order": i},
+            )
+        self.stdout.write("Synced about cards")
 
         service_defaults = [
-            ("📹", "CCTV Systems", "IP and analog surveillance for homes, businesses, and industrial sites. Axis-certified installations with remote viewing and recording.", ["Indoor & outdoor cameras", "NVR/DVR setup", "Remote monitoring"], 0),
-            ("🔐", "Access Control", "Card readers, biometric systems, door controllers, and integrated entry management for secure facilities.", ["Card & fob systems", "Biometric readers", "Time & attendance"], 1),
-            ("🧠", "SAFR Facial Recognition", "Authorized SAFR reseller and installer from RealNetworks. AI-powered facial recognition for secure access, watchlist matching, and intelligent video analytics.", ["Facial recognition access", "Watchlist & threat detection", "Occupancy analytics"], 2),
-            ("🔥", "Fire Alarm Systems", "Silent Knight and FireLite fire detection, notification, and monitoring systems for code-compliant life safety.", ["Detection & notification", "Panel programming", "24/7 monitoring"], 3),
-            ("📻", "Communications", "Two-way radios, intercoms, and transmission infrastructure including copper, fiber, microwave, and point-to-point links.", ["Radio systems", "Fiber & copper cabling", "Microwave links"], 4),
-            ("🖥️", "Server & Network Setup", "Server configuration, network architecture, and infrastructure to support your security and business systems.", ["Server deployment", "Network design", "System integration"], 5),
-            ("💻", "Software Development", "Custom software solutions for monitoring dashboards, access management, and system automation tailored to your needs.", ["Custom dashboards", "API integrations", "Automation tools"], 6),
-            ("👁️", "System Monitoring", "Continuous monitoring of fire alarms, CCTV, and access systems with rapid response and alert management.", ["Central station monitoring", "Alert management", "Health checks"], 7),
-            ("🎓", "Staff Training", "Hands-on training for your team on operating, maintaining, and troubleshooting installed systems.", ["On-site training", "Documentation", "Certification prep"], 8),
+            ("cctv", "CCTV Systems", "IP and analog surveillance for homes, businesses, and industrial sites. Axis-certified installations with remote viewing and recording.", ["Indoor & outdoor cameras", "NVR/DVR setup", "Remote monitoring"], 0),
+            ("access", "Access Control", "Card readers, biometric systems, door controllers, and integrated entry management for secure facilities.", ["Card & fob systems", "Biometric readers", "Time & attendance"], 1),
+            ("facial", "SAFR Facial Recognition", "Authorized SAFR reseller and installer from RealNetworks. AI-powered facial recognition for secure access, watchlist matching, and intelligent video analytics.", ["Facial recognition access", "Watchlist & threat detection", "Occupancy analytics"], 2),
+            ("fire", "Fire Alarm Systems", "Silent Knight and FireLite fire detection, notification, and monitoring systems for code-compliant life safety.", ["Detection & notification", "Panel programming", "24/7 monitoring"], 3),
+            ("radio", "Communications", "Two-way radios, intercoms, and transmission infrastructure including copper, fiber, microwave, and point-to-point links.", ["Radio systems", "Fiber & copper cabling", "Microwave links"], 4),
+            ("server", "Server & Network Setup", "Server configuration, network architecture, and infrastructure to support your security and business systems.", ["Server deployment", "Network design", "System integration"], 5),
+            ("code", "Software Development", "Custom software solutions for monitoring dashboards, access management, and system automation tailored to your needs.", ["Custom dashboards", "API integrations", "Automation tools"], 6),
+            ("monitor", "System Monitoring", "Continuous monitoring of fire alarms, CCTV, and access systems with rapid response and alert management.", ["Central station monitoring", "Alert management", "Health checks"], 7),
+            ("training", "Staff Training", "Hands-on training for your team on operating, maintaining, and troubleshooting installed systems.", ["On-site training", "Documentation", "Certification prep"], 8),
         ]
         for icon, title, desc, features, order in service_defaults:
             Service.objects.update_or_create(
@@ -176,7 +178,7 @@ class Command(BaseCommand):
                     "Designed coverage map, installed Axis cameras, NVR, and mobile app access.",
                     "Full perimeter coverage, 30-day recording, staff trained same day.",
                     ["CCTV", "Axis", "Remote viewing"],
-                    "📹",
+                    "cctv",
                     True,
                 ),
                 (
@@ -188,7 +190,7 @@ class Command(BaseCommand):
                     "SAFR facial recognition at main entry plus 6-camera CCTV integration.",
                     "Secure family access, visitor logs, and phone notifications.",
                     ["SAFR", "Access Control", "CCTV"],
-                    "🧠",
+                    "facial",
                     True,
                 ),
                 (
@@ -200,27 +202,36 @@ class Command(BaseCommand):
                     "New Silent Knight panel, detection devices, horn/strobes, and testing.",
                     "Code-compliant system with documented inspection and staff walkthrough.",
                     ["Fire Alarm", "Silent Knight", "Life Safety"],
-                    "🔥",
+                    "fire",
                     False,
                 ),
             ]
             for i, (title, ptype, loc, summary, challenge, solution, result, tags, icon, featured) in enumerate(projects):
-                Project.objects.create(
+                Project.objects.update_or_create(
                     title=title,
-                    property_type=ptype,
-                    location=loc,
-                    summary=summary,
-                    challenge=challenge,
-                    solution=solution,
-                    result=result,
-                    services=tags,
-                    icon=icon,
-                    is_featured=featured,
-                    order=i,
+                    defaults={
+                        "property_type": ptype,
+                        "location": loc,
+                        "summary": summary,
+                        "challenge": challenge,
+                        "solution": solution,
+                        "result": result,
+                        "services": tags,
+                        "icon": icon,
+                        "is_featured": featured,
+                        "order": i,
+                    },
                 )
-            self.stdout.write("Created sample projects")
+            self.stdout.write("Synced sample projects")
         else:
-            self.stdout.write("Projects already exist — skipping")
+            project_icons = {
+                "Multi-Camera Commercial Surveillance": "cctv",
+                "Residential SAFR & Access Upgrade": "facial",
+                "Fire Alarm & Life Safety Retrofit": "fire",
+            }
+            for title, icon in project_icons.items():
+                Project.objects.filter(title=title).update(icon=icon)
+            self.stdout.write("Synced project icons")
 
         if not Testimonial.objects.exists():
             testimonials = [

@@ -1,4 +1,5 @@
 {% extends "website/base.html" %}
+{% load site_icons %}
 
 {% block title %}Services | {{ site.company_name }}{% endblock %}
 
@@ -10,7 +11,7 @@
     <div class="services-grid">
       {% for service in services %}
       <article class="service-card glass-card" data-tilt>
-        <div class="service-icon">{{ service.icon }}</div>
+        <div class="service-icon">{% site_icon service.icon %}</div>
         <h3>{{ service.title }}</h3>
         <p>{{ service.description }}</p>
         {% if service.features %}

@@ -1,5 +1,6 @@
 {% extends "website/base.html" %}
 {% load static %}
+{% load site_icons %}
 
 {% block body_class %}page-home{% endblock %}
 {% block main_class %}scroll-container{% endblock %}
@@ -93,42 +94,42 @@
     </div>
     <div class="home-hub-grid">
       <a href="{% url 'about' %}" class="home-hub-card glass-card">
-        <span class="home-hub-icon">🛡️</span>
+        <span class="home-hub-icon">{% site_icon "shield" %}</span>
         <h3>About Us</h3>
         <p>Who we are, our partners &amp; certifications</p>
       </a>
       <a href="{% url 'services' %}" class="home-hub-card glass-card">
-        <span class="home-hub-icon">📹</span>
+        <span class="home-hub-icon">{% site_icon "cctv" %}</span>
         <h3>Services</h3>
         <p>CCTV, access control, fire alarms &amp; more</p>
       </a>
       <a href="{% url 'projects' %}" class="home-hub-card glass-card">
-        <span class="home-hub-icon">🏗️</span>
+        <span class="home-hub-icon">{% site_icon "building" %}</span>
         <h3>Projects</h3>
         <p>Case studies from across Grand Bahama</p>
       </a>
       <a href="{% url 'pricing' %}" class="home-hub-card glass-card">
-        <span class="home-hub-icon">💰</span>
+        <span class="home-hub-icon">{% site_icon "pricing" %}</span>
         <h3>Pricing</h3>
         <p>Transparent packages &amp; à la carte options</p>
       </a>
       <a href="{% url 'reviews' %}" class="home-hub-card glass-card">
-        <span class="home-hub-icon">⭐</span>
+        <span class="home-hub-icon">{% site_icon "star" %}</span>
         <h3>Reviews</h3>
         <p>What our clients say about EES</p>
       </a>
       <a href="{% url 'faq' %}" class="home-hub-card glass-card">
-        <span class="home-hub-icon">❓</span>
+        <span class="home-hub-icon">{% site_icon "help" %}</span>
         <h3>FAQ</h3>
         <p>Common questions answered</p>
       </a>
       <a href="{% url 'book' %}" class="home-hub-card glass-card featured">
-        <span class="home-hub-icon">📅</span>
+        <span class="home-hub-icon">{% site_icon "calendar" %}</span>
         <h3>Book a Visit</h3>
         <p>Free on-site assessment — schedule now</p>
       </a>
       <a href="{% url 'contact' %}" class="home-hub-card glass-card">
-        <span class="home-hub-icon">📍</span>
+        <span class="home-hub-icon">{% site_icon "map" %}</span>
         <h3>Contact</h3>
         <p>Location, hours &amp; directions</p>
       </a>
@@ -146,7 +147,7 @@
     <div class="services-grid services-grid-compact">
       {% for service in services|slice:":4" %}
       <article class="service-card glass-card">
-        <div class="service-icon">{{ service.icon }}</div>
+        <div class="service-icon">{% site_icon service.icon %}</div>
         <h3>{{ service.title }}</h3>
         <p>{{ service.description|truncatewords:24 }}</p>
       </article>

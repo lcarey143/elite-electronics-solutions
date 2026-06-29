@@ -1,5 +1,6 @@
 {% extends "website/base.html" %}
 {% load static %}
+{% load site_icons %}
 
 {% block title %}About Us | {{ site.company_name }}{% endblock %}
 
@@ -11,7 +12,7 @@
     <div class="about-grid">
       {% for card in about_cards %}
       <div class="about-card glass-card">
-        <div class="about-icon">{{ card.icon }}</div>
+        <div class="about-icon">{% site_icon card.icon %}</div>
         <h3>{{ card.title }}</h3>
         <p>{{ card.description }}</p>
       </div>

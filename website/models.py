@@ -116,7 +116,11 @@ class SiteSettings(models.Model):
 
 
 class AboutCard(models.Model):
-    icon = models.CharField(max_length=10, default="🛡️")
+    icon = models.CharField(
+        max_length=20,
+        default="shield",
+        help_text='Icon key, e.g. "shield", "cctv", "fire"',
+    )
     title = models.CharField(max_length=120)
     description = models.TextField()
     order = models.PositiveIntegerField(default=0)
@@ -129,7 +133,11 @@ class AboutCard(models.Model):
 
 
 class Service(models.Model):
-    icon = models.CharField(max_length=10, default="📹")
+    icon = models.CharField(
+        max_length=20,
+        default="cctv",
+        help_text='Icon key, e.g. "cctv", "access", "fire"',
+    )
     title = models.CharField(max_length=120)
     description = models.TextField()
     features = models.JSONField(default=list, help_text='List of feature strings, e.g. ["Indoor cameras", "NVR setup"]')
@@ -308,7 +316,11 @@ class Project(models.Model):
         blank=True,
         help_text='Static asset path, e.g. "assets/projects/site-1.jpg" — leave blank for icon placeholder',
     )
-    icon = models.CharField(max_length=10, default="📹")
+    icon = models.CharField(
+        max_length=20,
+        default="cctv",
+        help_text='Icon key when no project photo is uploaded',
+    )
     is_featured = models.BooleanField(default=False)
     order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)

@@ -25,7 +25,11 @@
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <a href="{% url 'home' %}" class="nav-logo">
-        <img src="{% static 'assets/logo.png' %}" alt="{{ site.company_name }}">
+        <img src="{% static 'assets/logo-mark.png' %}" alt="" class="nav-logo-mark" width="320" height="320" decoding="async">
+        <span class="nav-logo-text">
+          <span class="nav-logo-name">Elite Electronics</span>
+          <span class="nav-logo-tag">Solutions</span>
+        </span>
       </a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -59,8 +63,14 @@
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <img src="{% static 'assets/logo.png' %}" alt="EES Logo">
-        <p>{{ site.company_name }} — Your trusted systems integrator for security and life safety in The Bahamas.</p>
+        <a href="{% url 'home' %}" class="footer-logo">
+          <img src="{% static 'assets/logo-mark.png' %}" alt="" class="footer-logo-mark" width="320" height="320" decoding="async">
+          <span class="footer-logo-text">
+            <span class="footer-logo-name">Elite Electronics</span>
+            <span class="footer-logo-tag">Solutions</span>
+          </span>
+        </a>
+        <p>Your trusted systems integrator for security and life safety in The Bahamas.</p>
       </div>
       <div class="footer-links">
         <h4>Quick Links</h4>

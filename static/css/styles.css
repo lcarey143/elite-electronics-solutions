@@ -129,19 +129,38 @@ a, button, input, select, textarea, label {
   color: var(--text-primary);
 }
 
-.nav-logo img {
-  height: 48px;
+.nav-logo img,
+.nav-logo-mark {
+  height: 44px;
   width: auto;
-  max-width: min(220px, 42vw);
+  flex-shrink: 0;
   object-fit: contain;
 }
 
-.nav-logo span {
+.nav-logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  line-height: 1.05;
+  min-width: 0;
+}
+
+.nav-logo-name {
   font-family: 'Orbitron', sans-serif;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: clamp(0.72rem, 1.6vw, 0.95rem);
   color: var(--green-lime);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.nav-logo-tag {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: clamp(0.62rem, 1.3vw, 0.78rem);
+  color: var(--text-secondary);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 .nav-links {
@@ -983,12 +1002,44 @@ a, button, input, select, textarea, label {
   margin-bottom: 2rem;
 }
 
-.footer-brand img {
-  height: 56px;
+.footer-brand img,
+.footer-logo-mark {
+  height: 52px;
   width: auto;
-  max-width: 240px;
   object-fit: contain;
+}
+
+.footer-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
   margin-bottom: 1rem;
+  text-decoration: none;
+}
+
+.footer-logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  line-height: 1.05;
+}
+
+.footer-logo-name {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--green-lime);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.footer-logo-tag {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 .footer-brand p {
@@ -2021,6 +2072,14 @@ a, button, input, select, textarea, label {
 
   .nav-toggle {
     display: flex;
+  }
+
+  .nav-logo-text {
+    display: none;
+  }
+
+  .nav-logo-mark {
+    height: 40px;
   }
 
   .nav-links {
